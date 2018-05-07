@@ -8,4 +8,4 @@ Members:
 * [Jaan Bernberg](https://github.com/jbrnbrg)
 * [Ilya Kats](https://github.com/ilyakats)
 * [Kyle Gilde](https://github.com/kylegilde)
-* Michael Muller
+* [Michael Muller](parastyle)

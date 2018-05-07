@@ -13,7 +13,7 @@ knitr::opts_chunk$set(message = FALSE)
 
 # Intro
 Hi all. This is the area we should modify to create code to analyze the data.
-Results and figures will be placd into the other .md file for presentation
+Results and figures will be placd into the other .md file for presentation.
 
 # Libraries
 ```{r}
@@ -27,3 +27,5 @@ trainDF <- read_csv('house-prices-advanced-regression-techniques/train.csv')
 trainDF %>% glimpse()
 ```
 
+
+We have a large amount of varibales to work with which is ideal for data mining.

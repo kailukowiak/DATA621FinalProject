@@ -11,6 +11,10 @@ knitr::opts_chunk$set(warning = FALSE)
 knitr::opts_chunk$set(message = FALSE)
 ```
 
+# Intro
+Hi all. This is the area we should modify to create code to analyze the data.
+Results and figures will be placd into the other .md file for presentation
+
 # Libraries
 ```{r}
 library(tidyverse)

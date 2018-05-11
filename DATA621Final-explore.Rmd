@@ -241,12 +241,15 @@ stat_info[c(2:nrow(stat_info)),c(2:5,8:9,13:ncol(stat_info)-1)]
 
 ```{r summary stats factor, include = TRUE, echo=TRUE}
 summary(full_set_clean %>% select(fac_vars, -Id, -SalePrice, -d_name))
+
+train_data %>% 
+  filter(Garage_Age_Yrs < 0 | RemodAdd_Age_Yrs < 0 | Garage_Age_Yrs < 0) # Ids c(524, 2296, 2550, 2593)
 ```
 
 ```{r}
 train_data <- full_set_clean %>% filter(d_name == 'train')
 test_data <- full_set_clean %>% filter(d_name == 'test')
-
+View(train_data)
 dim(train_data)
 dim(test_data)
 ```
@@ -293,4 +296,5 @@ dim(test_data)
 # INCOME 445
 # AGE 6
 ```
+
 

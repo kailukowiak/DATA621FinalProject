@@ -293,27 +293,4 @@ dim(test_data)
 # INCOME 445
 # AGE 6
 ```
-```{r, include = FALSE}
-# c("BsmtExposure", "BsmtFinType2", "MasVnrType", 
-#        "MasVnrArea", "Electrical")
-# 
-# lvs_bsmtExp <- c('No', 'Gd', 'Mn', 'Av', 'NoBsmt')
-# month_levels <- c(
-#   "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
-#   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-# )
-
-
-# unique(original_train$BsmtExposure)
-# unique(original_train$MoSold) 
-```
-
-
-
-```{r, include = FALSE}
-# length(fac_vars)
-# pairs(train_data[, num_vars])
-
-
-```
 

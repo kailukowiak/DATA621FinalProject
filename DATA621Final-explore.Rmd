@@ -2,7 +2,7 @@
 title: "Data Exploration DATA621 Final"
 author: "jbrnbrg"
 date: "May 8, 2018"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=TRUE, message=FALSE, echo=TRUE, warning=FALSE}
@@ -239,21 +239,23 @@ stat_info <- psych::describe(full_set_clean %>% select(num_vars, -Id, -d_name))
 stat_info[c(2:nrow(stat_info)),c(2:5,8:9,13:ncol(stat_info)-1)]
 ```
 
-```{r summary stats factor, include = TRUE, echo=TRUE}
+```{r summary stats factor, include = TRUE, echo=TRUE, warning=FALSE, message=FALSE}
 summary(full_set_clean %>% select(fac_vars, -Id, -SalePrice, -d_name))
 
-train_data %>% 
-  filter(Garage_Age_Yrs < 0 | RemodAdd_Age_Yrs < 0 | Garage_Age_Yrs < 0) # Ids c(524, 2296, 2550, 2593)
 ```
 
 ```{r}
-train_data <- full_set_clean %>% filter(d_name == 'train')
-test_data <- full_set_clean %>% filter(d_name == 'test')
-View(train_data)
+train_data <- full_set_clean %>% filter(d_name == 'train') %>% select(-d_name)
+test_data <- full_set_clean %>% filter(d_name == 'test') %>% select(-d_name)
+#View(train_data)
 dim(train_data)
 dim(test_data)
 ```
 
+```{r values with neg calc cols}
+full_set_clean %>% 
+  filter(Garage_Age_Yrs < 0 | RemodAdd_Age_Yrs < 0 | Garage_Age_Yrs < 0) # Ids c(524, 2296, 2550, 2593)
+```
 
 
 ```{r unused mice, warning = FALSE, echo = FALSE, message=FALSE, include = FALSE}

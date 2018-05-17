@@ -293,9 +293,14 @@ full_set_clean %>%
 # 3. Data Preparation (Kyle)
 
 "The ggplot2 package is used to plot images in layers [@wickham_ggplot2_2009]."
+"You have to reference the "
+@wickham_ggplot2_2009
+@RCoreTeam
+@Chang2015
+
 
 ```{r plot2.1}
-hist(train_data$SalePrice)
+hist(train_data$SalePrice, main = "Plot 3.1")
 ```
 
 
@@ -381,20 +386,13 @@ hist(train_data$SalePrice)
 
 ```
 
-## Bibliography
-```{r generateBibliography, echo=FALSE, eval=TRUE, message=FALSE, warning=FALSE}
 
-#cleanbib()
-#options("citation_format" = "pandoc")
-read.bibtex(file = "bibliography.bib")
 
-```
-
-@Ggplot2
 
 ## Code
 ```{r Code, ref.label=knitr::all_labels(),echo=TRUE , eval=FALSE}
 
 ```
 
+## Bibliography
 

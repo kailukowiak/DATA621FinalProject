@@ -1,16 +1,22 @@
 ---
 title: "Data Exploration DATA621 Final"
 subtitle: "Modeling Housing Prices"
-authors: "Kai Lukowiak, Jaan Bernberg, Ilya Kats, Michael Muller"
+author: "Kai Lukowiak, Jaan Bernberg, Ilya Kats, Michael Muller"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
+
+
 output: 
   pdf_document:
     df_print: kable
     toc: true
     toc_depth: 2
-
-  bibliography: bibliography.bib
+    fig_caption: yes
+    
+abstract: "This document provides an introduction to R Markdown, argues for its..."
+keywords: "pandoc, r markdown, knitr"
+bibliography: bibliography.bib
 ---
+keywords: "pandoc, r markdown, knitr"
 
 ```{r options_pkgs, echo=F, warning=F, message=F, results=F}
 
@@ -49,11 +55,7 @@ install_load(packages)
 
 ```
 
-# Abstract
-Use 250 words or less to summarize your problem, methodology, and major
-outcomes.
 
-# Key Words
 
 # 1. Introduction (Jaan)
 
@@ -292,7 +294,7 @@ full_set_clean %>%
 
 "The ggplot2 package is used to plot images in layers [@wickham_ggplot2_2009]."
 
-```{r}
+```{r plot2.1}
 hist(train_data$SalePrice)
 ```
 
@@ -388,7 +390,7 @@ read.bibtex(file = "bibliography.bib")
 
 ```
 
-@wickham_ggplot_2009
+@Ggplot2
 
 ## Code
 ```{r Code, ref.label=knitr::all_labels(),echo=TRUE , eval=FALSE}

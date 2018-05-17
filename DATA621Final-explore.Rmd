@@ -1,32 +1,82 @@
 ---
 title: "Data Exploration DATA621 Final"
-author: "jbrnbrg"
-date: "May 8, 2018"
-output: github_document
+authors: "Kai Lukowiak, Jaan Bernberg, Ilya Kats, Michael Muller"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output: 
+  pdf_document:
+    df_print: kable
+    toc: true
+    toc_depth: 2
 ---
 
-```{r setup, include=TRUE, message=FALSE, echo=TRUE, warning=FALSE}
-library(tidyverse)
-library(RCurl)
-library(mice)
+```{r options_pkgs, echo=F, warning=F, message=F, results=F}
+knitr::opts_chunk$set(
+                      error = F
+                      , message = F
+                      #,tidy = T
+                      , cache = T
+                      , warning = T
+                      , results = F
+                      , echo = F
+                      )
 
-url_train = "https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/master/house-prices-advanced-regression-techniques/train.csv"
-url_test = "https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/master/house-prices-advanced-regression-techniques/test.csv"
+install_load <- function(pkg){
+  # Load packages & Install them if needed.
+  # CODE SOURCE: https://gist.github.com/stevenworthington/3178163
+  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+  if (length(new.pkg)) install.packages(new.pkg, dependencies = TRUE)
+  sapply(pkg, require, character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)
+}
+
+# required packages
+packages <- c("tidyverse","knitr", "ggthemes", "mice", "VIM", "RCurl")
+
+install_load(packages)
+
+```
+
+# Abstract
+Use 250 words or less to summarize your problem, methodology, and major
+outcomes.
+
+# Key Words
+
+# 1. Introduction (Jaan)
+
+## Data Set Origin
+
+## Variables
+
+## Cases
+
+Describe the background and motivation of your problem.
+
+
+
+
+
+```{r setup }
+##Read data
+url_train <- "https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/master/house-prices-advanced-regression-techniques/train.csv"
+url_test <-  "https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/master/house-prices-advanced-regression-techniques/test.csv"
 
 stand_read <- function(url){
   return(read.csv(text = getURL(url)))
 }
 
-o_train <- stand_read(url_train) %>% mutate(d_name = 'train')
-o_test <- stand_read(url_test) %>% mutate(SalePrice = NA, 
-                                          d_name = 'test')
+o_train <- 
+  stand_read(url_train) %>% 
+  mutate(d_name = 'train')
+o_test <- stand_read(url_test) %>% 
+  mutate(SalePrice = NA, d_name = 'test')
+
 full_set <- rbind(o_train, o_test)
 # x <- plot_missing(full_set)
 ```
 
 
 
-```{r data wrangle I, include = TRUE, warning=FALSE}
+```{r data wrangle I}
 na_review <- function(df){
   # returns df of vars w/ NA qty desc.
   na_qty <- colSums(is.na(df)) %>% as.data.frame(stringsAsFactors=F)
@@ -51,72 +101,40 @@ first_pass <- full_set %>%
          Garage_Age_Yrs = YrSold - GarageYrBlt) 
 ```
 
-```{r na review, include = TRUE, echo = FALSE}
+
+
+```{r na review}
 naVars <- na_review(first_pass %>% select(-SalePrice))
-# naVars
-#          Variable NA_qty Pct_of_Tot - Explanation qty, (Missing Id)
-# 1          PoolQC   2909      99.66 - No pool area 2906, (2600, 2504, 2421)
-# 2     MiscFeature   2814      96.40 - No feature, 'NA'
-# 3           Alley   2721      93.22 - No alley, 'NA'
-# 4           Fence   2348      80.44 - No fence, 'NA'
-# 5     FireplaceQu   1420      48.65 - No fplace, 'NA'
-# 6     LotFrontage    486      16.65 - No lin ft, 0
-# 7    GarageFinish    159       5.45 - No garage 158, (2127)
-# 8      GarageQual    159       5.45 - No garage 158, (2127)
-# 9      GarageCond    159       5.45 - No garage 158, (2127)
-# 10 Garage_Age_Yrs    159       5.45 - No garage 158, (2127)
-# 11     GarageType    157       5.38 - No garage 158, (2127) 
-# 12       BsmtCond     82       2.81 - No bsbmt 79, (2041, 2186, 2525)
-# 13   BsmtExposure     82       2.81 - No bsbmt 79, (1488, 949, 2349)
-# 14       BsmtQual     81       2.77 - No bsbmt 79, (2218, 2219)
-# 15   BsmtFinType2     80       2.74 - No bsbmt 79, (333)
-# 16   BsmtFinType1     79       2.71 - No bsbmt 79 
-# 17     MasVnrType     24       0.82 
-# 18     MasVnrArea     23       0.79 
-# 19       MSZoning      4       0.14 
-# 20      Utilities      2       0.07
-# 21   BsmtFullBath      2       0.07
-# 22   BsmtHalfBath      2       0.07
-# 23     Functional      2       0.07
-# 24    Exterior1st      1       0.03
-# 25    Exterior2nd      1       0.03
-# 26     BsmtFinSF1      1       0.03
-# 27     BsmtFinSF2      1       0.03
-# 28      BsmtUnfSF      1       0.03
-# 29    TotalBsmtSF      1       0.03
-# 30     Electrical      1       0.03
-# 31    KitchenQual      1       0.03
-# 32     GarageCars      1       0.03
-# 33     GarageArea      1       0.03
-# 34       SaleType      1       0.03
+naVars
 
-# set_aside <- c(2600, 2504, 2421, 2127, 2041, 2186, 2525, 1488, 949, 2349, 2218, 2219, 333)
-# View(first_pass[is.na(first_pass$PoolQC), ]) # 2600, 2504, 2421
-# View(first_pass[is.na(first_pass$GarageFinish), ]) # 2127
-# View(first_pass[is.na(first_pass$GarageQual), ]) # 2127
-# View(first_pass[is.na(first_pass$GarageCond), ]) # 2127
-# View(first_pass[is.na(first_pass$BsmtCond), ]) # 2041, 2186, 2525
-# View(first_pass[is.na(first_pass$BsmtExposure), ]) # 1488, 949, 2349
-# View(first_pass[is.na(first_pass$BsmtQual), ]) # 2218, 2219
-# View(first_pass[is.na(first_pass$BsmtFinType2), ]) # 333
-# View(first_pass[is.na(first_pass$MasVnrType), ]) # 
 
-# qty
-# first_pass[first_pass$PoolArea == 0, ]      # 2,906
-# first_pass[is.na(first_pass$PoolQC), ]
-# first_pass[is.na(first_pass$Alley), ]       # 2,721
-# first_pass[is.na(first_pass$Fence), ]       # 2,348
-# first_pass[first_pass$Fireplaces == 0, ]    # 1,420
-# first_pass[is.na(first_pass$GarageType),]   # 157
-# first_pass[is.na(first_pass$GarageArea),]   # 1
-# first_pass[is.na(first_pass$GarageFinish),] # 159
-# first_pass[first_pass$GarageArea == 0, ]    # 158
-# first_pass[first_pass$TotalBsmtSF == 0, ]   # 79
-# first_pass[is.na(first_pass$Electrical),]   # 1
+set_aside <- c(2600, 2504, 2421, 2127, 2041, 2186, 2525, 1488, 949, 2349, 2218, 2219, 333)
+#View(first_pass[is.na(first_pass$PoolQC), ]) # 2600, 2504, 2421
+#View(first_pass[is.na(first_pass$GarageFinish), ]) # 2127
+#View(first_pass[is.na(first_pass$GarageQual), ]) # 2127
+#View(first_pass[is.na(first_pass$GarageCond), ]) # 2127
+#View(first_pass[is.na(first_pass$BsmtCond), ]) # 2041, 2186, 2525
+#View(first_pass[is.na(first_pass$BsmtExposure), ]) # 1488, 949, 2349
+#View(first_pass[is.na(first_pass$BsmtQual), ]) # 2218, 2219
+#View(first_pass[is.na(first_pass$BsmtFinType2), ]) # 333
+#View(first_pass[is.na(first_pass$MasVnrType), ]) #
+
+#qty
+first_pass[first_pass$PoolArea == 0, ]      # 2,906
+first_pass[is.na(first_pass$PoolQC), ]
+first_pass[is.na(first_pass$Alley), ]       # 2,721
+first_pass[is.na(first_pass$Fence), ]       # 2,348
+first_pass[first_pass$Fireplaces == 0, ]    # 1,420
+first_pass[is.na(first_pass$GarageType),]   # 157
+first_pass[is.na(first_pass$GarageArea),]   # 1
+first_pass[is.na(first_pass$GarageFinish),] # 159
+first_pass[first_pass$GarageArea == 0, ]    # 158
+first_pass[first_pass$TotalBsmtSF == 0, ]   # 79
+first_pass[is.na(first_pass$Electrical),]   # 1
 ```
 
 
-```{r set aside problem cases, include = TRUE, message=FALSE, warning=FALSE, echo=TRUE}
+```{r set aside problem cases}
 set_asideA <- '2600|2504|2421|2127|2041|2186|2525|1488|949|2349|2218|2219|333' # 13
 set_asideB <- '|2550|524|2296|2593' # negative values in '_Age' columns
 
@@ -125,39 +143,21 @@ x <- first_pass %>%
   filter(!grepl(paste0(set_asideA, set_asideB), Id))
   
 naVarsx <- na_review(x %>% select(-SalePrice))
+naVarsx
 
-# naVarsx # variables with _known_ NA's
-#          Variable NA_qty Pct_of_Tot
-# 1          PoolQC   2887      99.65
-# 2     MiscFeature   2793      96.41
-# 3           Alley   2700      93.20
-# 4           Fence   2331      80.46
-# 5     FireplaceQu   1414      48.81
-# 6     LotFrontage    486      16.78
-# 7     GarageYrBlt    158       5.45
-# 8    GarageFinish    158       5.45
-# 9      GarageQual    158       5.45
-# 10     GarageCond    158       5.45
-# 11 Garage_Age_Yrs    158       5.45
-# 12     GarageType    157       5.42
-# 13       BsmtQual     78       2.69
-# 14       BsmtCond     78       2.69
-# 15   BsmtExposure     78       2.69
-# 16   BsmtFinType1     78       2.69
-# 17   BsmtFinType2     78       2.69
 
-# nrow(x[x$PoolArea==0, ])   # 2,887
-# x[is.na(x$MiscFeature),]   # 2,793
-# x[is.na(x$Alley),]         # 2,700
-# x[is.na(x$Fence),]         # 2,331
-# x[is.na(x$FireplaceQu),]   # 1,414 
-# nrow(x[x$LotFrontage==0, ])# 486
-# x[is.na(x$GarageArea),]    # 158
-# x[x$TotalBsmtSF == 0, ]    # 78
+nrow(x[x$PoolArea==0, ])   # 2,887
+x[is.na(x$MiscFeature),]   # 2,793
+x[is.na(x$Alley),]         # 2,700
+x[is.na(x$Fence),]         # 2,331
+x[is.na(x$FireplaceQu),]   # 1,414
+nrow(x[x$LotFrontage==0, ])# 486
+x[is.na(x$GarageArea),]    # 158
+x[x$TotalBsmtSF == 0, ]    # 78
 ```
 
 
-```{r complete known na, include = TRUE}
+```{r complete known na}
 obtain_data <- function(df){
   # like first_pass but with imputation that addresses 
   # observations that have known NA's
@@ -187,7 +187,7 @@ obtain_data <- function(df){
 }
 ```
 
-```{r recombine probs with updated, include = TRUE, echo=FALSE}
+```{r recombine probs with updated}
 probl_obs <- full_set %>% 
   mutate(House_Age_Yrs = YrSold - YearBuilt, 
          RemodAdd_Age_Yrs = YrSold - YearRemodAdd, 
@@ -201,17 +201,17 @@ known_obs <- full_set %>%
          Garage_Age_Yrs = YrSold - GarageYrBlt)
 
 full_set_clean <- rbind(obtain_data(known_obs), probl_obs) %>% arrange(Id)
-# View(full_set_clean)
-# summary(full_set_clean)
-# naVarsy <- na_review(full_set_clean %>% select(-SalePrice))
-# sum(naVarsy$NA_qty) # 176
-# unique(full_set_clean$Alley) # NoA  Grvl Pave <NA>, levels: Grvl Pave NoA
-# unique(full_set_clean$PoolQC) # NoP  Ex   <NA> Fa   Gd, levels: Ex Fa Gd NoP
-# unique(full_set_clean$GarageYrBlt) # character!
+#View(full_set_clean)
+summary(full_set_clean)
+naVarsy <- na_review(full_set_clean %>% select(-SalePrice))
+sum(naVarsy$NA_qty) # 176
+unique(full_set_clean$Alley) # NoA  Grvl Pave <NA>, levels: Grvl Pave NoA
+unique(full_set_clean$PoolQC) # NoP  Ex   <NA> Fa   Gd, levels: Ex Fa Gd NoP
+unique(full_set_clean$GarageYrBlt) # character!
 ```
 
 
-```{r datatype review, include = TRUE, echo= FALSE}
+```{r datatype review}
 var_types <- function(df){
   # returns df of Variable name and Type from df
   var_df <- sapply(df, class) %>% as.data.frame()
@@ -230,19 +230,20 @@ num_vars <- var_review %>% filter(grepl('character|integer|numeric', Var_Type)) 
   select(Variable) %>% t() %>% as.character() # 39 total but see GarageYrBlt #length(num_vars) 
 ```
 
+
 Number of complete cases original: 0  
 Number of complete cases after repairing known NA's: 2,861 ($\approx 98\%$)  
 Number of true NA's: 58
 
-```{r summary stats numeric, include = TRUE, echo=TRUE}
-# sum(complete.cases(full_set %>% select(-SalePrice)))       # 0
-# sum(complete.cases(full_set_clean %>% select(-SalePrice))) # 2,861 ~ 98%
-# nrow(full_set_clean) - 2861 # 58 NA
+```{r summary stats numeric}
+sum(complete.cases(full_set %>% select(-SalePrice)))       # 0
+sum(complete.cases(full_set_clean %>% select(-SalePrice))) # 2,861 ~ 98%
+nrow(full_set_clean) - 2861 # 58 NA
 stat_info <- psych::describe(full_set_clean %>% select(num_vars, -Id, -d_name))
 stat_info[c(2:nrow(stat_info)),c(2:5,8:9,13:ncol(stat_info)-1)]
 ```
 
-```{r summary stats factor, include = TRUE, echo=TRUE, warning=FALSE, message=FALSE}
+```{r summary stats factor}
 summary(full_set_clean %>% select(fac_vars, -Id, -SalePrice, -d_name))
 
 ```
@@ -250,7 +251,7 @@ summary(full_set_clean %>% select(fac_vars, -Id, -SalePrice, -d_name))
 ```{r}
 train_data <- full_set_clean %>% filter(d_name == 'train') %>% select(-d_name)
 test_data <- full_set_clean %>% filter(d_name == 'test') %>% select(-d_name)
-#View(train_data)
+##View(train_data)
 dim(train_data)
 dim(test_data)
 ```
@@ -266,8 +267,29 @@ full_set_clean %>%
   filter(Garage_Age_Yrs < 0 | RemodAdd_Age_Yrs < 0 | Garage_Age_Yrs < 0) # Ids c(524, 2296, 2550, 2593)
 ```
 
+# 2. Data Exploration (Kai)
 
-```{r unused mice, warning = FALSE, echo = FALSE, message=FALSE, include = FALSE}
+
+
+
+
+
+# 3. Data Preparation (Kyle)
+
+
+## Missing Value Imputation
+
+### Literature review
+
+### Methodology
+
+## Variable Transformations
+
+### Literature review
+
+### Methodology
+
+```{r unused mice}
 # init = mice(first_pass, maxit=0) 
 # meth = init$method
 # predM = init$predictorMatrix
@@ -309,3 +331,35 @@ full_set_clean %>%
 ```
 
 
+# 4. Modeling (????)
+
+### Literature review
+
+### Methodology
+
+
+# 5. Model Selection, Diagnostics & Conclusions (Ilya)
+
+### Literature review
+
+### Methodology
+
+#Appendix
+
+
+## Tables
+
+```{r Tables, ref.label=knitr::all_labels(), echo=FALSE, eval=TRUE, results=T}
+
+```
+
+## Plots
+
+```{r Plots, ref.label=knitr::all_labels(), echo=FALSE, eval=TRUE}
+
+```
+
+## Code
+```{r Code, ref.label=knitr::all_labels(),echo=TRUE , eval=FALSE}
+
+```

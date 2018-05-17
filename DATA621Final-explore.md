@@ -19,6 +19,7 @@ o_train <- stand_read(url_train) %>% mutate(d_name = 'train')
 o_test <- stand_read(url_test) %>% mutate(SalePrice = NA, 
                                           d_name = 'test')
 full_set <- rbind(o_train, o_test)
+# x <- plot_missing(full_set)
 ```
 
 ``` r
@@ -259,6 +260,11 @@ dim(test_data)
 ```
 
     ## [1] 1459   84
+
+``` r
+# Data Exploration Plots
+#plot_boxplot()
+```
 
 ``` r
 full_set_clean %>% 

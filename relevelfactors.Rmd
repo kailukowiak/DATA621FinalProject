@@ -1,0 +1,99 @@
+---
+title: "relevelfactors"
+author: "jbrnbrg"
+date: "May 18, 2018"
+output: github_document
+---
+
+
+```{r correct unordered factors}
+# ord_vars per the Data Dictionary.  
+ord_vars <- c("LotShape","Utilities", "LandSlope", "ExterQual", 
+              "ExterCond", "BsmtQual", "BsmtCond", "BsmtExposure",
+              "BsmtFinType1", "BsmtFinType2", "HeatingQC", "Electrical",
+              "KitchenQual", "Functional", "FireplaceQu", "GarageFinish",
+              "GarageQual", "GarageCond", "PavedDrive", "PoolQC", "Fence")
+
+# Order of levels for ordinal variables 
+# all are ordered most favorible to least favorible
+LotShape_ <- c("Reg", "IR1", "IR2", "IR3")        # needs repair
+Utilities_ <- c("AllPub", "NoSeWa")               # ok - No "NoSewr", "ELO"
+LandSlope_ <- c("Gtl","Mod", "Sev")               # ok
+ExterQual_ <- c("Ex", "Gd", "TA", "Fa")           # needs repair - No "Po"
+
+ExterCond_ <- c("Ex", "Gd", "TA", "Fa", "Po")     # needs repair
+BsmtQual_ <- c("Ex", "Gd", "TA", "Fa", "NoB")     # needs repair
+BsmtCond_ <- c("Gd", "TA", "Fa", "NoB")           # needs repair
+BsmtExposure_ <- c("Gd", "Av", "Mn", "No", "NoB") # needs repair
+
+BsmtFinType1_ <- c("GLQ", "ALQ", "BLQ", 
+                   "Rec", "LwQ", "Unf", "NoB")    # needs repair
+BsmtFinType2_ <- c("GLQ", "ALQ", "BLQ", 
+                   "Rec", "LwQ", "Unf", "NoB")    # needs repair
+HeatingQC_ <- c("Ex", "Gd", "TA", "Fa", "Po")     # needs repair 
+Electrical_ <- c("SBrkr", "FuseA", "FuseF",
+                 "FuseP", "Mix")                  # needs repair
+
+KitchenQual_ <- c("Ex", "Gd", "TA", "Fa")         # needs repair - no "Po"
+Functional_ <- c("Typ", "Min1", "Min2", "Mod",
+                 "Maj1", "Maj2", "Sev")           # needs repair - no "Sal"
+FireplaceQu_ <- c("Ex", "Gd", "TA", "Fa", 
+                  "Po", "NoFp")                   # needs repair
+GarageFinish_ <- c("Fin", "RFn", "Unf", "NoG")    # ok
+
+GarageQual_ <- c("Ex", "Gd", "TA", "Fa", "Po", 
+                 "NoG")                           # needs repair
+GarageCond_ <- c("Ex", "Gd", "TA", "Fa", "Po", 
+                 "NoG")                           # needs repair
+PavedDrive_ <- c("Y", "P", "N")                   # needs repair
+PoolQC_ <- c("Ex", "Gd", "Fa", "NoP")             # needs repair - no "TA"
+Fence_ <- c("GdPrv", "MnPrv", "GdWo", "MnWw",
+            "NoF")                                # needs repair
+
+# list of lists of the correct factor levels
+n_levels <- list(LotShape_, Utilities_,  LandSlope_,  ExterQual_,  
+                 ExterCond_,  BsmtQual_,  BsmtCond_,  BsmtExposure_, 
+                 BsmtFinType1_,  BsmtFinType2_,  HeatingQC_,  Electrical_, 
+                 KitchenQual_,  Functional_,  FireplaceQu_,  GarageFinish_, 
+                 GarageQual_,  GarageCond_,  PavedDrive_,  PoolQC_,  Fence_)
+names(n_levels) <- ord_vars                       # name vars so I can index
+
+relevel_data <- function(df, ord_list, new_lvls){
+  # updates factor cols df[ord_list] with new_lvls (list of lists)
+  i = sapply(colnames(full_set_clean), 
+             function (x) x %in% ord_list)        # obtain order list cols
+  df[i] = lapply(df[i], as.character)             # convert factors to char
+
+  for(s_var in ord_list){                         # correct levels 
+    df[[s_var]] = factor(df[[s_var]], new_lvls[[s_var]])
+  }
+  return(df)
+}
+
+# CLEAN UP FACTOR LEVELS ##########################################
+full_set_clean <- relevel_data(full_set_clean, ord_vars, n_levels)
+# unique(full_set_clean$GarageCond) # BEFORE: Levels: Ex Fa Gd Po TA NoG
+# lapply(full_set_clean[ord_vars], FUN = function(x) levels(x))
+
+# # Simple example using relevel_data:
+# # sample df w/ factor columns
+# x <- data.frame(Id = c("A12", "A12", "B11", "B11", "B11", "C1", NA),
+#                 vl = c(1.2, 1.11, 1.5, 1.16, 0, 0, 1),
+#                 tag = c("sm", "sm", "med", "med", "med", "med", "lg"))
+# # make list of ordinal vars in data
+# an.ord.list <- c("Id", "tag")
+# 
+# # show vars' orig factor levels
+# levels(x$Id)  # [1] "A12" "B11" "C1"
+# levels(x$tag) # [1] "lg"  "med" "sm"
+# 
+# # Create a list of lists w/ correct levels
+# Id_ <- c("C1", "A12", "B11")
+# tag_ <- c("sm", "med", "lg")
+# n.lvs <- list(Id_, tag_)
+# names(n.lvs) <- an.ord.list
+# 
+# x <- relevel_data(x, an.ord.list, n.lvs)
+# levels(x$Id) # [1] "C1"  "A12" "B11"
+# levels(x$tag)# [1] "sm", "med", "lg"
+```

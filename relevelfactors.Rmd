@@ -6,6 +6,37 @@ output: github_document
 ---
 
 
+##Notes for Abstract
+
+The attributes that make up the sale price of a house can seem daunting given a myriad of factors that can impact its value. However, given a high-quality data set with enough features, a skillful team of data science students can create a fairly accurate model that can be predict the price of a house.
+
+The Ames housing data was created by Dean De Cock of Truman State University, published in the Journal of Statistics and Education in 2011. Each of the over 2900 total observations in the data represent attributes of a residental property sold in Ames, IA between 2006 and 2010. The data, first made public in the Journal of Statics Education in 2011[^1], contains numerous features that an active home-buyer would be interested in. Among the seventy-nine (79) explanitory variables are thirty-six (36) numeric and forty-three (43) factors containing measures that are common to the housing market including lot area (square feet), garage type (atttached, built-in, etc.) and utilities (gas & sewer, no sewer, etc.).  Variables within each observation include features that are nominal, continuous, discrete, or ordinal (e.g. Basement Quality scored "Excellent" to "Poor"). 
+
+Our intention is to leverage this high-quality dataset to create generalized linear model to predict the Sale Price of a house in Ames IA.
+
+In this 
+
+
+##Data Preperation
+
+
+* All data raw data used for analysis was downloaded by our team from kaggle.com.  Files contained csv data for training and testing (with and without the response, sale price, respectively), as well as a data dictionary describing each of the explanitory variables.
+
+deteremined by a variety of A model to predict the sale price of houses using the Ames Housing dataset by Dean De Cock of Truman State University via kaggle.com.  
+
+The data, first made public in the Journal of Statics Education in 2011[^1], contains  
+
+Number of complete cases original: 0  
+Number of complete cases after repairing known NA's: 2,861 ($\approx 98\%$)  
+Number of true NA's: 58
+
+#References: 
+
+[^1]: [Ames, Iowa: Alternative to the Boston Housing Data as an End of Semester Regression Project by Dean De Cock](https://ww2.amstat.org/publications/jse/v19n3/decock.pdf)
+[^2]: [Ames Housing Data Documentation by Dean De Cock](https://ww2.amstat.org/publications/jse/v19n3/decock/DataDocumentation.txt)
+
+
+
 ```{r correct unordered factors}
 # ord_vars per the Data Dictionary.  
 ord_vars <- c("LotShape","Utilities", "LandSlope", "ExterQual", 
@@ -65,7 +96,7 @@ relevel_data <- function(df, ord_list, new_lvls){
   df[i] = lapply(df[i], as.character)             # convert factors to char
 
   for(s_var in ord_list){                         # correct levels 
-    df[[s_var]] = factor(df[[s_var]], new_lvls[[s_var]])
+    df[[s_var]] = factor(df[[s_var]], rev(new_lvls[[s_var]]))
   }
   return(df)
 }

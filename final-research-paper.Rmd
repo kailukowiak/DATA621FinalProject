@@ -1,43 +1,32 @@
 ---
-title: "Data Exploration DATA621 Final"
-subtitle: "Modeling Housing Prices"
-author: "Kai Lukowiak, Jaan Bernberg, Ilya Kats, Michael Muller"
-date: "`r format(Sys.time(), '%B %d, %Y')`"
-
+title: Determining Factors Influencing House Sale Prices
+author: | 
+        | **Kile Gilde, Jaan Bernberg, Kai Lukowiak,**
+        | **Michael Muller, Ilya Kats**
+        | DATA 621, Master of Science in Data Science,
+        | City University of New York
 
 output: 
   pdf_document:
     df_print: kable
-    toc: true
-    toc_depth: 2
+    toc: no
     fig_caption: yes
-    
-abstract: "This document provides an introduction to R Markdown, argues for its..."
-keywords: "pandoc, r markdown, knitr"
+
+nocite: | 
+  @wickham_ggplot2_2009, @RCoreTeam, @Chang2015
+  
+#abstract: "This document provides an introduction to R Markdown, argues for its..."
+#keywords: "pandoc, r markdown, knitr"
 bibliography: bibliography.bib
 ---
-keywords: "pandoc, r markdown, knitr"
+
 
 ```{r options_pkgs, echo=F, warning=F, message=F, results=F}
-
-##Use PDF for Final Paper
-  # html_document:
-  #   theme: yeti
-  #   code_folding: hide
-  #   toc: true
-  #   toc_float:
-  #     collapsed: true
-  #     smooth_scroll: false
-
-knitr::opts_chunk$set(
-                      error = F
-                      , message = F
-                      #,tidy = T
-                      , cache = T
-                      , warning = T
-                      , results = 'hide' #suppress code output
-                      , echo = F #suppress code
-                      , fig.show = 'hide' #suppress plots
+knitr::opts_chunk$set(error = F, message = F, # tidy = T,
+                      cache = T, warning = T, 
+                      results = 'hide', # suppress code output
+                      echo = F,         # suppress code
+                      fig.show = 'hide' # suppress plots
                       )
 
 install_load <- function(pkg){
@@ -48,33 +37,100 @@ install_load <- function(pkg){
   sapply(pkg, require, character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)
 }
 
-# required packages
-packages <- c("tidyverse","knitr", "ggthemes", "mice", "VIM", "RCurl", "knitcitations")
-
+# Required packages
+packages <- c("tidyverse", "RCurl",               # Data input and manipulation
+              "knitr", "knitcitations", "pander", # Data output
+              "ggthemes",                         # Plotting
+              "mice", "VIM"                       # Imputation
+              )
 install_load(packages)
-
 ```
 
+# Abstract
 
+TBD: Since it summarizes the work, it will be written at the end. 250 words or less summarizing the problem, methodology, and major
+outcomes.
 
-# 1. Introduction (Jaan)
+# Key Words
 
-## Data Set Origin
+house prices, regression, linear models, assessed value
 
-## Variables
+# Introduction
 
-## Cases
+This project stems out of the Business Analytics and Data Mining class in the Master of Science in Data Science program at CUNY. This paper is the result of the final class group project in applying regression methods to real-world data. Our team chose housing data because it promissed to be an interesting and useful subject. In addition, this research is based on a well studied data set which makes it an excellent educational resource allowing our team to study various approaches.
 
-Describe the background and motivation of your problem.
+The data set was prepared by Dean De Cock in an effort to create a real-world data set to test and practice regression methods [@DeCock]. It describes the sale of individual residential property in Ames, Iowa from 2006 to 2010. Ames, Iowa was founded in 1864 as a station stop. It has the population of about 60,000 people and covers about 24.27 sq mi. It was ranked ninth on the *Best Places to Live* list [@CNNMoney].
 
+The data came directly from the Assessor's Office in the form of a data dump from their records system and it included information for calculation of assessed values in the city's assessment process. The data is recent and it covers the period of housing bubble collapse that led to the subprime mortgage crisis. 2008 saw one of the largest housing price drops in history.
 
+Each of over 2,900 total observations in the data represent attributes of a residental property sold. For properties that exchanged ownership multiple times during the collection period (2006 through 2010), only the last sale is included in the data since it represents the most current value of the property. The attributes that make up the sale price of a house can seem daunting given a myriad of factors that can impact its value. There are about 80 variables included in the data set. Most variables describe physical attributes of the property. There is a variety of variable types - discrete, continous, categorical (both nominal and ordinal).
 
+Data set was downloaded from Kaggle.com which gave us the ability to compare our results with results of other teams working with this data set [@Kaggle].
 
+# Literature Review
+
+- 1 page
+- Discuss how other researchers have addressed similar problems, what their achievements are, and what the advantage and drawbacks of each reviewed
+approach are. 
+- Explain how your investigation is similar or different to the state-of-theart.
+
+Pardoe, I.
+https://ww2.amstat.org/publications/jse/v16n2/datasets.pardoe.html
+
+- One interesting implementation - half-bathrooms are counted as 0.1 out of belief that buyers do not value them as much as full bathrooms.
+
+Luttik, J.
+https://www.sciencedirect.com/science/article/pii/S0169204600000396
+The value of trees, water and open space as reflected by house prices in the Netherlands
+
+# Methodology
+
+- 2-3 pages
+- Discuss high-level exploratory data analysis - how data was prepared
+- Discuss high-level regression modeling
+- Discuss high-level model building and model selection
+
+### Data Description
+
+The data set includes 2,919 observation and 79 indepedent variables. Out of those 36 are numeric, such as lot area or pool area in square feet, and 43 are categorical, such as garage type (attached to home, built-in, carport, etc.) or utilities (gas, sewer, both, etc.).
+
+### Data Imputation
+
+Original data set included no complete observations (*see table 1*). However, many `NA` values found in the data carry useable information. For example, `NA` in the `PoolQC` variable (pool quality) implies that the property has no pool. Often this logic carried across multiple variables - for example, `NA` in `GarageQual` (garage quality), `GarageCond` (garage condition) and `GarageType` variables all imply that the property has no garage. This type of missing values was replaced with a new category - *No Pool*, *No Garage* or similar. After this substitution there remained only 58 observations with true missing values. 
+
+...
+
+# Experimentation and Results
+
+- 4-5 pages
+- Key figures and tables may be included here
+- Additional figures and tables should be added to appendices
+- Discuss data prepatation details not mentioned under Methodology
+- Discuss model building and selection
+- Discuss model validation
+- Discuss results of statistical analysis
+- Describe final model (coefficients, interpretation)
+- Discuss upload of results to Kaggle
+
+# Discussion
+
+- 1-2 pages
+- Discuss limitations
+- Discuss areas for future work
+- Discuss detailed findings
+- May be combined with Conclusion section below
+
+# Conclusion
+
+- 1 paragraph
+- Quick summary of findings
 
 ```{r setup }
 ##Read data
-url_train <- "https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/master/house-prices-advanced-regression-techniques/train.csv"
-url_test <-  "https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/master/house-prices-advanced-regression-techniques/test.csv"
+url_train <- paste0("https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/",
+                    "master/house-prices-advanced-regression-techniques/train.csv")
+url_test <-  paste0("https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/",
+                    "master/house-prices-advanced-regression-techniques/test.csv")
 
 stand_read <- function(url){
   return(read.csv(text = getURL(url)))
@@ -118,13 +174,16 @@ first_pass <- full_set %>%
 ```
 
 
-
-```{r na review}
+```{r NA Review}
 naVars <- na_review(first_pass %>% select(-SalePrice))
-naVars
+colnames(naVars) <- c("Variable", "No of NAs", "Percent of Total Obs")
+pander(naVars, keep.trailing.zeros=TRUE, 
+       caption="Number of NA values in original data.",
+       justify=c("left", "right", "right"))
 
 
-set_aside <- c(2600, 2504, 2421, 2127, 2041, 2186, 2525, 1488, 949, 2349, 2218, 2219, 333)
+set_aside <- c(2600, 2504, 2421, 2127, 2041, 2186, 2525, 1488, 949, 2349, 
+               2218, 2219, 333)
 #View(first_pass[is.na(first_pass$PoolQC), ]) # 2600, 2504, 2421
 #View(first_pass[is.na(first_pass$GarageFinish), ]) # 2127
 #View(first_pass[is.na(first_pass$GarageQual), ]) # 2127
@@ -159,7 +218,7 @@ x <- first_pass %>%
   filter(!grepl(paste0(set_asideA, set_asideB), Id))
   
 naVarsx <- na_review(x %>% select(-SalePrice))
-naVarsx
+# naVarsx
 
 
 nrow(x[x$PoolArea==0, ])   # 2,887
@@ -243,25 +302,23 @@ var_review <- var_types(full_set_clean %>% select(-c(Id,SalePrice,d_name)))
 fac_vars <- var_review %>% filter(Var_Type == 'factor') %>% 
   select(Variable) %>% t() %>% as.character() # 43 total length(fac_vars)
 num_vars <- var_review %>% filter(grepl('character|integer|numeric', Var_Type)) %>% 
-  select(Variable) %>% t() %>% as.character() # 39 total but see GarageYrBlt #length(num_vars) 
+  select(Variable) %>% t() %>% as.character() # 39 total but see GarageYrBlt  
 ```
 
-
-Number of complete cases original: 0  
-Number of complete cases after repairing known NA's: 2,861 ($\approx 98\%$)  
-Number of true NA's: 58
-
-```{r summary stats numeric}
-sum(complete.cases(full_set %>% select(-SalePrice)))       # 0
-sum(complete.cases(full_set_clean %>% select(-SalePrice))) # 2,861 ~ 98%
-nrow(full_set_clean) - 2861 # 58 NA
+```{r Summary Stats Numeric}
+#sum(complete.cases(full_set %>% select(-SalePrice)))       # 0
+#sum(complete.cases(full_set_clean %>% select(-SalePrice))) # 2,861 ~ 98%
+#nrow(full_set_clean) - 2861 # 58 NA
 stat_info <- psych::describe(full_set_clean %>% select(num_vars, -Id, -d_name))
-stat_info[c(2:nrow(stat_info)),c(2:5,8:9,13:ncol(stat_info)-1)]
+stat_tbl <- stat_info[c(2:nrow(stat_info)),c(2:5,8:9,13:ncol(stat_info)-1)]
+colnames(stat_tbl) <- c("Count", "Mean", "SD", "Median", "Min", "Max", "Kurtosis")
+pander(stat_tbl, caption="Descriptive statistics.",
+       digits=4, emphasize.rownames=FALSE,
+       justify=c("left", "right", "right", "right", "right", "right", "right", "right"))
 ```
 
 ```{r summary stats factor}
 summary(full_set_clean %>% select(fac_vars, -Id, -SalePrice, -d_name))
-
 ```
 
 ```{r}
@@ -272,127 +329,45 @@ dim(train_data)
 dim(test_data)
 ```
 
-```{r}
-# Data Exploration Plots
-#plot_boxplot()
-```
-
-
 ```{r values with neg calc cols}
 full_set_clean %>% 
-  filter(Garage_Age_Yrs < 0 | RemodAdd_Age_Yrs < 0 | Garage_Age_Yrs < 0) # Ids c(524, 2296, 2550, 2593)
-```
-
-# 2. Data Exploration (Kai)
-
-
-
-
-
-
-# 3. Data Preparation (Kyle)
-
-"The ggplot2 package is used to plot images in layers [@wickham_ggplot2_2009]."
-"You have to reference the "
-@wickham_ggplot2_2009
-@RCoreTeam
-@Chang2015
-
-
-```{r plot2.1}
-hist(train_data$SalePrice, main = "Plot 3.1")
+  filter(Garage_Age_Yrs < 0 | RemodAdd_Age_Yrs < 0 | Garage_Age_Yrs < 0) 
+# Ids c(524, 2296, 2550, 2593)
 ```
 
 
-## Missing Value Imputation
-
-### Literature review
-
-### Methodology
-
-## Variable Transformations
-
-### Literature review
-
-### Methodology
-
-```{r unused mice}
-# init = mice(first_pass, maxit=0) 
-# meth = init$method
-# predM = init$predictorMatrix
-# 
-# # The code below will remove the variable as a 
-# # predictor but still will be imputed. Just for 
-# # illustration purposes, I select the BMI 
-# # variable to not be included as predictor during 
-# # imputation.
-# predM[, c('SalePrice')] = 0
-# 
-# # If you want to skip a variable from imputation 
-# # use the code below. This variable will be 
-# # used for prediction.
-# meth[] = ""
-# 
-# # Now let specify the methods for imputing the 
-# # missing values. There are specific methods 
-# # for continues, binary and ordinal variables. 
-# # I set different methods for each variable. 
-# # You can add more than one variable in each method.
-# 
-# meth[c("BsmtExposure", "BsmtFinType2", "MasVnrType", 
-#        "MasVnrArea", "Electrical")]="norm" 
-# 
-# 
-# imputed = mice(clinsurf, method=meth, 
-#                predictorMatrix=predM, m=5, 
-#                printFlag = F)
-# #Create a dataset after imputation.
-# imputed <- complete(imputed)
-# sapply(imputed, FUN = function(x) sum(is.na(x)))
-# NA Qtys
-# CAR_AGE 510
-# HOME_VAL 464 
-# YOJ 454
-# INCOME 445
-# AGE 6
+```{r Figure2}
+plot(train_data$SalePrice, main = "Figure 2.")
 ```
 
+```{r Figure3}
+hist(train_data$SalePrice, main = "Figure 3.")
+```
 
-# 4. Modeling (????)
+\newpage
+# Appendix A. Figures
 
-### Literature review
-
-### Methodology
-
-
-# 5. Model Selection, Diagnostics & Conclusions (Ilya)
-
-### Literature review
-
-### Methodology
-
-#Appendix
-
-
-## Tables & Outputs
-
-```{r Tables, ref.label=knitr::all_labels(), echo=F, eval=TRUE, results=T}
+```{r Plots, ref.label=c("Figure2", "Figure3"), echo=F, fig.show="asis"}
 
 ```
 
-## Plots
+\newpage
+# Appendix B. Tables
 
-```{r Plots, ref.label=knitr::all_labels(), echo=FALSE, fig.show="asis"}
+```{r Table1, ref.label="NA Review", echo=F, eval=T, results=T}
+```
+
+\newpage
+```{r Table2, ref.label="Summary Stats Numeric", echo=F, eval=T, results=T}
+```
+
+\newpage
+# Appendix C. R Code
+
+```{r Code, ref.label=knitr::all_labels(), echo=T, eval=F}
 
 ```
 
-
-
-
-## Code
-```{r Code, ref.label=knitr::all_labels(),echo=TRUE , eval=FALSE}
-
-```
-
-## Bibliography
+\newpage
+# References
 

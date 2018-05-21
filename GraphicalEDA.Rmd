@@ -1,0 +1,115 @@
+---
+title: "Graphical EDA"
+author: "Kai Lukowiak"
+date: '2018-05-20'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(ggthemes)
+library(RColorBrewer)
+```
+
+
+```{r}
+df <- read_csv('house-prices-advanced-regression-techniques/train.csv')
+df[sapply(df, is.character)] <- lapply(df[sapply(df, is.character)], as.factor)
+```
+
+```{r  fig.height=15, fig.width=10}
+df %>% 
+  select_if(is.numeric) %>% 
+  gather() %>% 
+  ggplot(aes(x=value)) +
+  geom_histogram() +
+  facet_wrap(~key, ncol = 4, scales = 'free') +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+
+
+```{r fig.height=15, fig.width=10}
+df %>% 
+  select_if(is.factor) %>% 
+  gather() %>% 
+  ggplot(aes(x=value)) +
+  geom_bar(stat = 'count') +
+  facet_wrap(~key, ncol = 3, scales = 'free') +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+
+```{r fig.height=15, fig.width=10}
+df %>% 
+  select_if(is.numeric) %>% 
+  gather(VariableName, Value, -SalePrice, -Id) %>% 
+  ggplot(aes(SalePrice,Value)) +
+  geom_point(colour = 'gray28', alpha = 0.3) +
+  facet_wrap(~VariableName, ncol = 4, scales = 'free') +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r fig.height=10, fig.width=12}
+df %>% 
+  dplyr::select(which(sapply(.,class)=="factor"), SalePrice) %>% 
+  gather(VariableName, Value, -SalePrice) %>%
+  ggplot(aes(SalePrice,Value))+
+  geom_point(colour = 'gray28', alpha = 0.3) +
+  facet_wrap(~VariableName, ncol = 4, scales = 'free') +
+  theme_minimal() +
+   theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+
+
+
+
+```{r fig.height=5, fig.width=3}
+pMiss <- function(x){sum(is.na(x))/length(x)*100}
+misPercent <- matrix(apply(df,2,pMiss))
+isFactor <- sapply(df, class)
+missDF <- data.frame(VarNames = colnames(df), PercentNA = misPercent, Type = isFactor) %>% as_data_frame()
+p <- ggplot(missDF, aes(x = reorder(VarNames, PercentNA), y = PercentNA, fill = Type)) +
+  geom_bar(stat = 'identity') +
+  coord_flip()+
+  theme_tufte()
+```
+
+```{r}
+ggsave('missingVals.png')
+```
+
+
+```{r}
+corrDF <- df %>% 
+  select_if(is.numeric) %>% 
+  na.omit %>% 
+  cor()
+```
+
+```{r}
+
+corDF <- as.data.frame(corrDF)
+corDF[lower.tri(corDF)] <- NA
+
+cor_tri <- as.data.frame(corDF) %>% 
+  mutate(Var1 = factor(row.names(.), levels=row.names(.))) %>% 
+  gather(key = Var2, value = value, -Var1, na.rm = TRUE, factor_key = TRUE) 
+
+ggplot(data = cor_tri) + 
+  geom_tile(aes(Var2, Var1,fill = value)) +
+  theme_minimal()+
+  #scale_fill_manual(values=rev(brewer.pal(7,"YlGnBu")),na.value="grey90")
+   scale_fill_gradientn(colours = heat.colors(10)) +
+   theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+```
+

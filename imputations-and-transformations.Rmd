@@ -651,6 +651,8 @@ stripplot(mice_mod, pch = 20, cex = 1.2, main = "Figure 3.3: Strip Plots of Obse
 
 ## Variable Transformations
 
+We will take a few approaches to possible variable transformations. We will both simiplify and add variables and create three versions of the training data for modeling. First, using the side-by-side box plots in Figure 3.4, we will examine our categorical variables with more than two values and see if the variable can be simplified by combining the values into two groups. Our criteria for this simplification will be if the variables' inner quartile ranges of the response variable distinctly and logically bifurcate. For example, in the variables for fireplace quality `FireplaceQu`, heating quality `HeatingQC` & pool quality, we notice that only the inner quartiles are bifurcated into two groups that do not overlap: the the highest Excellent value `Ex` versus all other lesser quality conditions. Additionally, the inner quartiles for the wood shingle value `WdShngl` in the roof material variable `RoofMat1`, the above average values in  garage quality `GarageQual`, the gas values in `Heating` and the `Partial` value in `SaleCondition` are distinct from the rest of their variables' respective values. Consequently, we will transform these into dummy variables with appropriate names, and this will allow us to preserve some of the degrees of freedom that would otherwise be subtracted if each and every one of the original values were turned into dummy variables.
+
 
 
 ```{r Cat_var_box_plots, fig.width = 15, fig.height = 15}
@@ -668,11 +670,12 @@ ggplot(data = boxplot_data, aes(x = value, y = SalePrice)) +
   geom_boxplot() +
   facet_wrap( ~ variable, scales = "free") +
   coord_flip() +
-  labs(title = "Figure 3.X: ")
+  labs(title = "Figure 3.4: Side-by-Side Box Plots of the Categorical Variables versus the Response")
 
 #Reference: https://stackoverflow.com/questions/14604439/plot-multiple-boxplot-in-one-graph?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
 
 ```
+
 
 
 ```{r correlation, fig.width = 10, fig.height = 10}
@@ -709,8 +712,15 @@ kable(head(dplyr::filter(cor_df, Var1 == "SalePrice" | Var2 == "SalePrice"  ), 1
 #Reference: https://stackoverflow.com/questions/28035001/transform-correlation-matrix-into-dataframe-with-records-for-each-row-column-pai
 ```
 
+Next, let's examine whether our modeling would benefit from transforming any of our predictor variables. To do so, we will take advantage of `R`'s computing power and create several different versions of our predictor variables. First, we will take the natural logrithms, square roots and squares of the numerical variables, and then we will calculate every possible pairwise interaction between these transformations, the original numerical variables and categorical variables. Finally, we calculate all of the pairwise correlations between the interactions and the response variable `SalePrice`. The top correlations can be seen in table 3.5, which is sorted descendingly by R-squared. We observe that there are several correlation values higher than the highest correlation between the original predictor and the response, which is `OverallQual` at .79. They generally involve taking the square of `OverallQual` and multiplying by the log or square root of one of the monetary-value variables. We will include five of the top interactions that make the most sense in our training sets. 
 
-```{r response_correlations, fig.width = 10, fig.height = 10}
+The first of the three training data sets will include only the original variables with the missing values imputed. In our second training data set, we will substitute the seven "simplified" dummy variables for the original seven variables, and we will include the five highly-correlated interactions. Our third training data set will include the new predictor variables of the second set as well as a transformed response variable. While creating the all of the interactions, we noticed that the correlation values appeared to increase vis-a-vis the square root of the response. Consequently, since the response variable contains only positive values, let's create create a simple BIC step model and use it to calculate the Box-Cox $\Lambda$ value. According to Box-Cox, a $\Lambda$ value of approximately .184 should help our final model meet the normality assumption.
+
+
+# 7 categorical re-classifications & 5 interactions
+
+
+```{r response_correlations, fig.height=11, fig.width=10}
 ### CORRELATIONS WITH RESPONSE
 pred_vars <- dplyr::select(train_data_numeric, -SalePrice)
 
@@ -781,9 +791,9 @@ if (!exists("response_correlations")){
 #response_correlations <- splitstackshape::cSplit(response_correlations, "Var2", sep = ":", drop = F)   
 
 n_rows <- 50
-kable(head(response_correlations, n_rows), digits = 3, caption = "Table 3.23452")
-kable(head(dplyr::filter(response_correlations, Var1 == "SalePrice"), n_rows), digits = 3, caption = "Table 3.52345243")
-kable(head(dplyr::filter(response_correlations, Var1 == "SalePrice_sqrt"), n_rows), digits = 3, caption = "Table 3. 43524352")
+#kable(head(response_correlations, n_rows), digits = 3, caption = "Table 3.23452")
+#kable(head(dplyr::filter(response_correlations, Var1 == "SalePrice"), n_rows), digits = 3, caption = "Table 3.52345243")
+kable(head(dplyr::filter(response_correlations, Var1 == "SalePrice_sqrt"), n_rows), digits = 3, caption = "Table 3.5: Top Correlations with the Original Response Variable")
 ```
 
 

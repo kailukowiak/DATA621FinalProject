@@ -84,7 +84,7 @@ The data set includes 2,919 observation and 79 indepedent variables. Out of thos
 
 ### Data Imputation
 
-Original data set included no complete observations (*see table 1*). However, many `NA` values found in the data carry useable information. For example, `NA` in the `PoolQC` variable (pool quality) implies that the property has no pool. Often this logic carried across multiple variables - for example, `NA` in `GarageQual` (garage quality), `GarageCond` (garage condition) and `GarageType` variables all imply that the property has no garage. This type of missing values was replaced with a new category - *No Pool*, *No Garage* or similar. This work was accomplished using the `forcats` R package.
+Original data set included no complete observations (*see table 1*). However, many `NA` values found in the data carry useable information. For example, `NA` in the `PoolQC` variable (pool quality) implies that the property has no pool. Often this logic carried across multiple variables - for example, `NA` in `GarageQual` (garage quality), `GarageCond` (garage condition) and `GarageType` variables all imply that the property has no garage. This type of missing values was replaced with a new category - *No Pool*, *No Garage* or similar. This work was accomplished using the `forcats` `R` package.
 
 After this substitution the number of complete observations went up significantly to 2,861 or about 98% of all observations. There remained only 58 observations with true missing values (about 2% of the total observations). These observations contained 180 missing values in 32 variables. None of the variables contained a large number of missing values. The top one was `MasVnrType` with 24 observations containing `NA` (0.8% of all observations). None of the variables were close to the 5% missing threshold that would suggest that we should drop them from analysis.
 
@@ -97,7 +97,7 @@ There are four ways to deal with missing values [@Prabhakaran]:
 - **Imputation via mean, median and mode:** An expedient way to retain all of the cases and variables is to insert the mean or median for continuous variables or the mode for categorical or discrete variables. This approach may suffice for a small number of values, but has the potential to introduce bias in the form of decreasing the variance.
 - **Prediction:** This more advanced approach involves using the other variables to predict the missing values.
 
-For our data set we used multiple imputation by chained equations (MICE). The technique involves imputing multiple iterations of values in order to account for statistical uncertainty with standard errors [@azur]. Since it uses chained equations, MICE has the ability to impute both numerical and categorical variables. The ideal scenario to use MICE is when less than 5% of the values are missing and when values are missing at random. We used the `mice` R package with the `cart` (classification and regression trees) method. CART is one of the five `mice` methods that can impute both numerical and categorical variables. Figure 2 shows the density plots of the observed and imputed values. The imputed distributions have more variance and extremes than the observed distributions. If we were to run, multiple imputations, hopefully we would begin to see more convergence between the imputed and observed values.
+For our data set we used multiple imputation by chained equations (MICE). The technique involves imputing multiple iterations of values in order to account for statistical uncertainty with standard errors [@azur]. Since it uses chained equations, MICE has the ability to impute both numerical and categorical variables. The ideal scenario to use MICE is when less than 5% of the values are missing and when values are missing at random. We used the `mice` `R` package with the `cart` (classification and regression trees) method. CART is one of the five `mice` methods that can impute both numerical and categorical variables. Figure 2 shows the density plots of the observed and imputed values. The imputed distributions have more variance and extremes than the observed distributions. If we were to run, multiple imputations, hopefully we would begin to see more convergence between the imputed and observed values.
 
 ```{r NA Review}
 naVars <- read.csv(paste0("https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/",
@@ -117,9 +117,35 @@ As is the case with most data sets, we found several values that were clearly ty
 
 ### Data Transformation
 
+Prior to modeling, we have extensively analyzed available variables and took a few approaches to variable transformations. They were ment to both simplify existing variables and add new variables that may be helpful in modeling. 
+
 Generally, it is more common to think about the age of the house than the year it was built. Each age related variable was stored in the data set in two related variables - year built and year sold. Rather than trying to work with original variables we have converted them to a single *age* variable. For house age the value was $YrSold - YearBuilt$. Similarly the age of garage and remodeling was added to the data set. Original variables were dropped from analysis.
 
 Because we are not dealing with a time series data set, we have converted `YrSold` and `MoSold` variables from numeric to nominal. It is important to catch seasonality, but does not make sense to regress on these variables as continous variables.
+
+Using the side-by-side box plots in Figure 3, we examined the categorical variables with more than two values to see if the variable can be simplified by combining the values into two groups. Our criteria for this simplification is if the variables' inner quartile ranges of the response variable distinctly and logically bifurcate. For example, in `FireplaceQu` (fireplace quality), `HeatingQC` (heating quality) and `PoolQC` (pool quality), we can notice that only the inner quartiles are bifurcated into two groups that do not overlap: the highest *Excellent* value and all other lesser quality conditions. Additional values that are distinct from other values in the same variables are the *Wood Shingle* value in the roof material variable (`RoofMat1`), the above average values in the garage quality variable (`GarageQual`), the gas-related values in the heating variable (`Heating`), and the *Partial* value in the sale condition variable (`SaleCondition`). Consequently, we transformed these into dummy variables with appropriate names. This allowed us to preserve some degrees of freedom that would otherwise be subtracted if each and every one of the original values were turned into dummy variables.
+
+```{r Correlations1}
+top_corr <- read.csv(paste0("https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/",
+                            "master/report_files/table3_top_corr.csv"))
+colnames(top_corr) <- c("Predictor Variable", "Response Variable", "Correlation", "R^2")
+pander(top_corr, keep.trailing.zeros=TRUE, 
+       caption="Predictor variables most correlated with original response variable.",
+       justify=c("left", "left", "right", "right"))
+```
+
+```{r Correlations2}
+tran_corr <- read.csv(paste0("https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/",
+                            "master/report_files/table4_top_transform.csv"))
+colnames(tran_corr) <- c("Response Variable", "Predictor Transformation", "Correlation", "R^2")
+pander(tran_corr, keep.trailing.zeros=TRUE, 
+       caption="Predictor transformations most correlated with transformed response variable.",
+       justify=c("left", "left", "right", "right"))
+```
+
+We examined whether our modeling would benefit from transforming any of the predictor variables. To do so, we have automated creation of several different versions of the predictor variables using `R`. We took natural logarithms, square roots and squares of the numerical variables, and then we calculated every possible pairwise interaction between these transformations, the original numerical variables and categorical variables. We then calculated all pairwise correlations between the interactions and the response variable `SalePrice`. The top correlations can be seen in table 4, which is sorted descendingly by R-squared. We observed that there are several correlation values higher than the highest correlation between the original predictor and the response, which is `OverallQual` at 0.79 (*see table 3*). Most promising transformations involved taking the square of `OverallQual` and multiplying it by the log-transformed or square-root-transformed one of the area variables. We added top five interactions to our training data set.
+
+We have created several potential training sets to give use flexibility in training the model. The first of the three training data sets we created includes only the original variables with the missing values imputed. The second training data set includes seven "simplified" dummy variables instead of original variables. It also includes five highly-correlated interactions. The third training data set includes the same predictor variables as in the second set with a transformed response variable. While creating all interactions, we noticed that the correlation values appeared to increase vis-a-vis the square root of the response variable. Consequently, since the response variable contains only positive values, rget's create create a simple BIC step model and use it to calculate the Box-Cox $\Lambda$ value. According to Box-Cox, a $\Lambda$ value of approximately .184 should help our final model meet the normality assumption.
 
 ### Modeling
 
@@ -172,6 +198,12 @@ Figure 1. Missing values.
 Figure 2. Density plots of observed (blue) and imputed (red) values.
 \end{center}
 
+![](https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/master/report_files/fig3_boxplots.png)
+\begin{center}
+Figure 3. Box plots of categorical variables against the response variable.
+\end{center}
+
+
 ```{r Plots, ref.label=c("Figure1", "Figure2"), echo=F, fig.show="asis"}
 ```
 
@@ -186,7 +218,14 @@ Figure 2. Density plots of observed (blue) and imputed (red) values.
 ```
 
 \newpage
-# Appendix C. R Code
+```{r Table1, ref.label="Correlations1", echo=F, eval=T, results=T}
+```
+
+```{r Table1, ref.label="Correlations2", echo=F, eval=T, results=T}
+```
+
+\newpage
+# Appendix C. `R` Code
 
 ```{r Code, echo=T, eval=F}
 

@@ -1,7 +1,7 @@
 ---
 title: Determining Factors Influencing House Sale Prices
 author: | 
-        | **Kile Gilde, Jaan Bernberg, Kai Lukowiak,**
+        | **Kyle Gilde, Jaan Bernberg, Kai Lukowiak,**
         | **Michael Muller, Ilya Kats**
         | DATA 621, Master of Science in Data Science,
         | City University of New York

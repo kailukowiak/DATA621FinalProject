@@ -826,7 +826,8 @@ test_predictors_transformed <-
 #3. Box-cox response transformation added to the existing predictor transformations
 lmod <- lm(SalePrice ~ ., data = train_predictors_transformed)
 n <- nrow(train_predictors_transformed)
-BIC_lmod <- step(lmod, trace = 0, k = log(n))
+
+if (!exists("BIC_lmod")) BIC_lmod <- step(lmod, trace = 0, k = log(n))
 
 PT <- car::powerTransform(as.formula(BIC_lmod$call), data = train_predictors_transformed)
 
@@ -839,6 +840,9 @@ train_BC_transformed <-
 # write.csv(train_orig_vars_imputed, "train_orig_vars_imputed.csv")
 # write.csv(train_predictors_transformed, "train_predictors_transformed.csv")
 # write.csv(train_BC_transformed, "train_BC_transformed.csv")
+# write.csv(test_orig_vars_imputed, "test_orig_vars_imputed.csv")
+# write.csv(test_predictors_transformed, "test_predictors_transformed.csv")
+
 ```
 
 

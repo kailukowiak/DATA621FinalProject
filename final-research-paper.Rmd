@@ -138,7 +138,7 @@ We examined whether our modeling would benefit from transforming any of the pred
 
 We have created several potential training sets to give use flexibility in training the model. The **first** of the three training data sets we created includes only the original variables with the missing values imputed. In model building and selection this set is referred to as the *original* data set. The **second** training data set includes seven "simplified" dummy variables instead of original variables. It also includes five highly-correlated interactions. This set is referred to as the *transformed* data set. The **third** training data set includes the same predictor variables as in the second set with a transformed response variable. While creating all interactions, we noticed that the correlation values appeared to increase vis-a-vis the square root of the response variable. Consequently, since the response variable contains only positive values, we created a simple BIC step model and used it to calculate the Box-Cox $\lambda$ value and transform the response variable. According to Box-Cox, a $\lambda$ value of approximately 0.184 should help the final model meet the normality assumption. This set is referred as the *Box-Cox* data set.
 
-The effects of this transformation can be see in the scatter plots of the independant variables on SalePrice. The trends are more decernable in the transformed data and the relations are generally more linear (*see figure. 
+The effects of this transformation can be see in the scatter plots of the independent variables on `SalePrice`. The trends are more decernable in the transformed data and the relations are generally more linear (*see figure 6*). 
 
 ### Modeling
 
@@ -278,9 +278,9 @@ Figure 4. Box plots of categorical variables against the response variable.
 Figure 5. Correlation heat map.
 \end{center}
 
-![](https://github.com/kaiserxc/DATA621FinalProject/blob/master/images/Scatter_Trans_and_Imp.png)
+![](https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/master/images/Scatter_Trans_and_Imp.png)
 \begin{center}
-Figure 6. Scatter Plot.
+Figure 6. Scatter plots of original and transformed variables.
 \end{center}
 
 

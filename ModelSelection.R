@@ -129,4 +129,9 @@ table(transformedData2$HouseStyle)
 table(transformedData2$RoofStyle)
 table(transformedData2$RoofMatl_WdShngl)
 table(transformedData2$GarageQual_abv_avg)
+table(transformedData2$MasVnrArea)
+
+ce <- as.data.frame(m6TD2$coefficients)
+colnames(ce) <- c("Coefficient")
+write.csv(round(ce, 6), "c://temp//embedded_table2_coef.csv", row.names = TRUE)
 

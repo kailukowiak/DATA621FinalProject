@@ -50,7 +50,7 @@ Lot,Feet of street connected to property,6.60E-05,LotFrontage
 Lot,Inside lot,-0.004728,LotConfigInside
 Lot,Frontage on 2 sides,-0.02665,LotConfigFR2
 Lot,Frontage on 3 sides,-0.075301,LotConfigFR3
-Neighborhood,Stone Brook,0.096771,NeighborhoodStoneBr
+Neighborhood,Stone Brooke,0.096771,NeighborhoodStoneBr
 Neighborhood,Crawford,0.086667,NeighborhoodCrawfor
 Neighborhood,Northridge Heights,0.039785,NeighborhoodNridgHt
 Neighborhood,Somerset,0.030671,NeighborhoodSomerst

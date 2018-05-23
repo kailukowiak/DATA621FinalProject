@@ -161,7 +161,14 @@ We ended up with six representative models:
 
 For all models the F-statistic's p-value shows a drastic improvement over an intercept-only model, so we can infer that these models are statistically significant.
 
-
+```{r Models Summary, echo=F, eval=T, results=T}
+models <- read.csv(paste0("https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/",
+                          "master/report_files/embedded_table1_models.csv"))
+colnames(models) <- c("Model", "Multiple R^2", "Adjusted r^2", "AIC", "Kaggle Score")
+pander(models, caption="",
+       digits=4, emphasize.rownames=FALSE, keep.trailing.zeros=TRUE, 
+       justify=c("left", "right", "right", "right", "right"))
+```
 
 # Experimentation and Results
 

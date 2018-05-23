@@ -42,5 +42,28 @@ Notice that many of these relationships look non-linear.
 
 
 ``` markdown
-![]('images/Scatter_Numeric_Imputed.png')
+![]('images/Imputed_Categorical_Scatter.png')
 ```
+
+There are fewer trends here, but some dummy variables may be useful.
+
+
+
+![]('images/Imputed_Categorical_Scatter.png')
+
+
+``` markdown
+![]('images/Scatter_Numeric_Transformed.png')
+```
+
+Transforming the response variable makes the relationships much linear as well
+as making trends more obvious.
+
+
+
+![]('images/Scatter_Numeric_Transformed.png')
+
+
+
+There is not a tone to say about the correlation heat matrix except that there
+is little worry about multi co-linearity.

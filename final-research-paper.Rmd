@@ -35,7 +35,7 @@ library(pander)
 
 # Abstract
 
-Buying or selling a house is one of the important events faced by many in their lifetime. It is also a big part of our economy. As such understanding what factors drive sale prices is both interesting and beneficial. In this project we use popular Ames, Iowa housing data set to investigate what factors may influence the final sale price the most. Our research showed that location and condition of the house are the biggest attributes. A bigger house will not increase the final sale price as much as a smaller, nicer house in a better neighrborhood. It definitely doesn't pay to have the biggest house on the block.
+Buying or selling a house is one of the important events faced by many in their lifetime. It is also a big part of our economy. As such understanding what factors drive sale prices is both interesting and beneficial. In this project we use popular Ames, Iowa housing data set to investigate what factors may influence the final sale price the most. Our research showed that location and condition of the house are the biggest attributes. A bigger house will not increase the final sale price as much as a smaller, nicer house in a better neighborhood. It definitely doesn't pay to have the biggest house on the block.
 
 # Key Words
 
@@ -43,19 +43,19 @@ house prices, regression, linear models, assessed value
 
 # Introduction
 
-This project stems out of the Business Analytics and Data Mining class in the Master of Science in Data Science program at CUNY. This paper is the result of the final class group project in applying regression methods to real-world data. Our team chose housing data because it promissed to be an interesting and useful subject. In addition, this research is based on a well studied data set which makes it an excellent educational resource allowing our team to study various approaches.
+This project stems out of the Business Analytics and Data Mining class in the Master of Science in Data Science program at CUNY. This paper is the result of the final class group project in applying regression methods to real-world data. Our team chose housing data because it promised to be an interesting and useful subject. In addition, this research is based on a well studied data set which makes it an excellent educational resource allowing our team to study various approaches.
 
 The data set was prepared by Dean De Cock in an effort to create a real-world data set to test and practice regression methods [@DeCock]. It describes the sale of individual residential property in Ames, Iowa from 2006 to 2010. Ames, Iowa was founded in 1864 as a station stop. It has the population of about 60,000 people and covers about 24.27 sq mi. It was ranked ninth on the *Best Places to Live* list [@CNNMoney].
 
-The data came directly from the Assessor's Office in the form of a data dump from their records system and it included information for calculation of assessed values in the city's assessment process. The data is recent and it covers the period of housing bubble collapse that led to the subprime mortgage crisis. 2008 saw one of the largest housing price drops in history.
+The data came directly from the Assessor's Office in the form of a data dump from their records system and it included information for calculation of assessed values in the city's assessment process. The data is recent and it covers the period of housing bubble collapse that led to the sub-prime mortgage crisis. 2008 saw one of the largest housing price drops in history.
 
-Each of over 2,900 total observations in the data represent attributes of a residental property sold. For properties that exchanged ownership multiple times during the collection period (2006 through 2010), only the last sale is included in the data since it represents the most current value of the property. The attributes that make up the sale price of a house can seem daunting given a myriad of factors that can impact its value. There are about 80 variables included in the data set. Most variables describe physical attributes of the property. There is a variety of variable types - discrete, continous, categorical (both nominal and ordinal).
+Each of over 2,900 total observations in the data represent attributes of a residential property sold. For properties that exchanged ownership multiple times during the collection period (2006 through 2010), only the last sale is included in the data since it represents the most current value of the property. The attributes that make up the sale price of a house can seem daunting given a myriad of factors that can impact its value. There are about 80 variables included in the data set. Most variables describe physical attributes of the property. There is a variety of variable types - discrete, continuous, categorical (both nominal and ordinal).
 
 The data was originally published in the Journal of Statistics Education (Volume 19, Number 3). Data set was downloaded from Kaggle.com which gave us the ability to compare our results with results of other teams working with this data set [@Kaggle].
 
 # Literature Review
 
-Building regression models to predict house prices is not a new undertaking. Quite the opposite, a lot of research went into this area. There is a clear financial benefit to buyers, sellers and other parties in knowing which attributes influence final sale price. There is also a lot of data readily available with some cleanup work. Data is kept by local governments to be used in the assessment process for property taxes. There is a lot of data captured by realors when a property is listed on the market. Additionally, in large part thanks to information revolution, data is easily accessible via many aggregators such as MLS.
+Building regression models to predict house prices is not a new undertaking. Quite the opposite, a lot of research went into this area. There is a clear financial benefit to buyers, sellers and other parties in knowing which attributes influence final sale price. There is also a lot of data readily available with some cleanup work. Data is kept by local governments to be used in the assessment process for property taxes. There is a lot of data captured by realtors when a property is listed on the market. Additionally, in large part thanks to information revolution, data is easily accessible via many aggregators such as MLS.
 
 There are many attributes that factor into a house price. For example, environmental attributes can impact the price substantially. A garden facing water, a pleasant view whether it overlooks water or open space, attractive landscaping all increase house prices [@luttik]. Neighborhood attributes such as schools and public services also play a factor. 
 
@@ -71,11 +71,11 @@ A few examples we state here is just scratching the surface of this particular t
 
 ### Data Description
 
-The data set includes 2,910 observation and 79 indepedent variables. Out of those 36 are numeric, such as lot area or pool area in square feet, and 43 are categorical, such as garage type (attached to home, built-in, carport, etc.) or utilities (gas, sewer, both, etc.). The data set is split into 1,460 observations comprising the training set and 1,459 observations representing the testing set.
+The data set includes 2,910 observation and 79 independent variables. Out of those 36 are numeric, such as lot area or pool area in square feet, and 43 are categorical, such as garage type (attached to home, built-in, carport, etc.) or utilities (gas, sewer, both, etc.). The data set is split into 1,460 observations comprising the training set and 1,459 observations representing the testing set.
 
 ### Data Imputation
 
-Original data set included no complete observations (*see table 3*). However, many `NA` values found in the data carry useable information. For example, `NA` in the `PoolQC` variable (pool quality) implies that the property has no pool. Often this logic carried across multiple variables - for example, `NA` in `GarageQual` (garage quality), `GarageCond` (garage condition) and `GarageType` variables all imply that the property has no garage. This type of missing values was replaced with a new category - *No Pool*, *No Garage* or similar. This work was accomplished using the `forcats` `R` package.
+Original data set included no complete observations (*see table 3*). However, many `NA` values found in the data carry usable information. For example, `NA` in the `PoolQC` variable (pool quality) implies that the property has no pool. Often this logic carried across multiple variables - for example, `NA` in `GarageQual` (garage quality), `GarageCond` (garage condition) and `GarageType` variables all imply that the property has no garage. This type of missing values was replaced with a new category - *No Pool*, *No Garage* or similar. This work was accomplished using the `forcats` `R` package.
 
 After this substitution the number of complete observations went up significantly to 2,861 or about 98% of all observations. There remained only 58 observations with true missing values (about 2% of the total observations). These observations contained 180 missing values in 32 variables. None of the variables contained a large number of missing values. The top one was `MasVnrType` with 24 observations containing `NA` (0.8% of all observations). None of the variables were close to the 5% missing threshold that would suggest that we should drop them from analysis.
 
@@ -108,11 +108,11 @@ As is the case with most data sets, we found several values that were clearly ty
 
 ### Data Transformation
 
-Prior to modeling, we have extensively analyzed available variables and took a few approaches to variable transformations. They were ment to both simplify existing variables and add new variables that may be helpful in modeling. 
+Prior to modeling, we have extensively analyzed available variables and took a few approaches to variable transformations. They were meant to both simplify existing variables and add new variables that may be helpful in modeling. 
 
 Generally, it is more common to think about the age of the house than the year it was built. Each age related variable was stored in the data set in two related variables - year built and year sold. Rather than trying to work with original variables we have converted them to a single *age* variable. For house age the value was $YrSold - YearBuilt$. Similarly the age of garage and remodeling was added to the data set. Original variables were dropped from analysis.
 
-Because we are not dealing with a time series data set, we have converted `YrSold` and `MoSold` variables from numeric to nominal. It is important to catch seasonality, but does not make sense to regress on these variables as continous variables.
+Because we are not dealing with a time series data set, we have converted `YrSold` and `MoSold` variables from numeric to nominal. It is important to catch seasonality, but does not make sense to regress on these variables as continuous variables.
 
 Using the side-by-side box plots in Figure 4, we examined the categorical variables with more than two values to see if the variable can be simplified by combining the values into two groups. Our criteria for this simplification is if the variables' inner quartile ranges of the response variable distinctly and logically bifurcate. For example, in `FireplaceQu` (fireplace quality), `HeatingQC` (heating quality) and `PoolQC` (pool quality), we can notice that only the inner quartiles are bifurcated into two groups that do not overlap: the highest *Excellent* value and all other lesser quality conditions. Additional values that are distinct from other values in the same variables are the *Wood Shingle* value in the roof material variable (`RoofMat1`), the above average values in the garage quality variable (`GarageQual`), the gas-related values in the heating variable (`Heating`), and the *Partial* value in the sale condition variable (`SaleCondition`). Consequently, we transformed these into dummy variables with appropriate names. This allowed us to preserve some degrees of freedom that would otherwise be subtracted if each and every one of the original values were turned into dummy variables.
 
@@ -134,25 +134,25 @@ pander(tran_corr, keep.trailing.zeros=TRUE,
        justify=c("left", "left", "right", "right"))
 ```
 
-We examined whether our modeling would benefit from transforming any of the predictor variables. To do so, we have automated creation of several different versions of the predictor variables using `R`. We took natural logarithms, square roots and squares of the numerical variables, and then we calculated every possible pairwise interaction between these transformations, the original numerical variables and categorical variables. We then calculated all pairwise correlations between the interactions and the response variable `SalePrice`. The top correlations can be seen in table 6, which is sorted descendingly by R-squared. We observed that there are several correlation values higher than the highest correlation between the original predictor and the response, which is `OverallQual` at 0.79 (*see table 5*). Most promising transformations involved taking the square of `OverallQual` and multiplying it by the log-transformed or square-root-transformed one of the area variables. We added top five interactions to our training data set.
+We examined whether our modeling would benefit from transforming any of the predictor variables. To do so, we have automated creation of several different versions of the predictor variables using `R`. We took natural logarithms, square roots and squares of the numerical variables, and then we calculated every possible pairwise interaction between these transformations, the original numerical variables and categorical variables. We then calculated all pairwise correlations between the interactions and the response variable `SalePrice`. The top correlations can be seen in table 6, which is sorted in descending order by R-squared. We observed that there are several correlation values higher than the highest correlation between the original predictor and the response, which is `OverallQual` at 0.79 (*see table 5*). Most promising transformations involved taking the square of `OverallQual` and multiplying it by the log-transformed or square-root-transformed one of the area variables. We added top five interactions to our training data set.
 
 We have created several potential training sets to give use flexibility in training the model. The **first** of the three training data sets we created includes only the original variables with the missing values imputed. In model building and selection this set is referred to as the *original* data set. The **second** training data set includes seven "simplified" dummy variables instead of original variables. It also includes five highly-correlated interactions. This set is referred to as the *transformed* data set. The **third** training data set includes the same predictor variables as in the second set with a transformed response variable. While creating all interactions, we noticed that the correlation values appeared to increase vis-a-vis the square root of the response variable. Consequently, since the response variable contains only positive values, we created a simple BIC step model and used it to calculate the Box-Cox $\lambda$ value and transform the response variable. According to Box-Cox, a $\lambda$ value of approximately 0.184 should help the final model meet the normality assumption. This set is referred as the *Box-Cox* data set.
 
 ### Modeling
 
-Since we are dealing with trying to predict a continous variable, house sale price, we relied on building and optimizing general linear model.
+Since we are dealing with trying to predict a continuous variable, house sale price, we relied on building and optimizing general linear model.
 
-After fitting three baseline (all k-parameters) models to all three training data sets, ANOVA demonstrated statistical significance between the original data set and the transformed data set. While all multiple $R^2$ values were within some neglible deviation of each other, adding a Box-Cox transformation of the response variable improved the $R^2$ beyond the model based on the original data set. 
+After fitting three baseline (all k-parameters) models to all three training data sets, ANOVA demonstrated statistical significance between the original data set and the transformed data set. While all multiple $R^2$ values were within some negligible deviation of each other, adding a Box-Cox transformation of the response variable improved the $R^2$ beyond the model based on the original data set. 
 
-We took the strongest model, and applied stepwise regression. Since we started with the baseline model containing all variables we applied backward elimination in order to settle on a model with the lowest Akaike information criterion (AIC) value.
+We took the strongest model, and applied step-wise regression. Since we started with the baseline model containing all variables we applied backward elimination in order to settle on a model with the lowest Akaike information criterion (AIC) value.
 
-For non-transformed response variable, we expetimented with applying log-transformation as it tends to bring sales data closer to normal distribution.
+For non-transformed response variable, we experimented with applying log-transformation as it tends to bring sales data closer to normal distribution.
 
 We ended up with six representative models:
 
 1. **Model 1** is based on the fully transformed data set with Box-Cox transformed response variable. It includes all available predictor variables including any interactions created in data preparation. This model explains nearly 94% of variability of the response variable. A good starting point, but we can remove some insignificant variables for a more parsimonious model and lower chances of overfitting.
-2. **Model 2** is based on Model 1 modified with stepwise regression (backward elimination). It is an improvement with lower number of parameters (156 comparing to 237). The multiple $R^2$ value is similar. Comparing two models using ANOVA indicates that they are not significantly different.
-3. **Model 3** selects only statistically highly significant variables from the previous model (p-value is nearly 0). $R^2$ drops and F-statistic rises, so even though the model is simplier with only 58 parameters, it may not be an improvement. Comparing this model with the first one using ANOVA, shows that there is significant difference between the two.
+2. **Model 2** is based on Model 1 modified with step-wise regression (backward elimination). It is an improvement with lower number of parameters (156 comparing to 237). The multiple $R^2$ value is similar. Comparing two models using ANOVA indicates that they are not significantly different.
+3. **Model 3** selects only statistically highly significant variables from the previous model (p-value is nearly 0). $R^2$ drops and F-statistic rises, so even though the model is simpler with only 58 parameters, it may not be an improvement. Comparing this model with the first one using ANOVA, shows that there is significant difference between the two.
 4. **Model 4** expands on the previous model by using statistically significant variables, but with less strict criteria (p-value < 0.01). Number of parameters is increased, but $R^2$ is also increased. Similarly, per ANOVA, this model is significantly different from models 1 and 3.
 5. **Model 5** takes variables identified in the previous model, but it is trained on the original data set without interactions. It uses only log-transformation of `LotArea` predictor variable and `SalePrice` response variable. This model represents the best results based on $R^2$ for any model we have tried using the original data set.
 6. **Model 6** is based on Model 4, but it is trained on the transformed data set that includes interactions, but not the Box-Cox transformation of the response variable. Similarly to model 5, this model uses log-transformed `LotArea` and `SalePrice`. 
@@ -172,17 +172,17 @@ pander(models, caption="",
 
 Since the data set comes from Kaggle, we have an easy way to validate test these models by predicting the sale price for the testing set and submitting our predictions. Kaggle provides a score that lets you judge the performance of our models. We submitted predictions from models 5 and 6. Model 6 was a clear favorite. 
 
-Models 1 through 4 rely on the Box-Cox transformation of the response variable with $\lambda$ value of 0.184. Although this may slightly improve a model, it makes conversion of prediction difficult and confusing. Log-transformation of the response variable used by models 5 and 6 is signficantly easier to implement. As such slight improvement of the Box-Cox model is not enough to justify added complexity of making predictions. It is important to consider how the model will be implemented and simplicity matters. 
+Models 1 through 4 rely on the Box-Cox transformation of the response variable with $\lambda$ value of 0.184. Although this may slightly improve a model, it makes conversion of prediction difficult and confusing. Log-transformation of the response variable used by models 5 and 6 is significantly easier to implement. As such slight improvement of the Box-Cox model is not enough to justify added complexity of making predictions. It is important to consider how the model will be implemented and simplicity matters. 
 
 Model 6 is our primary linear regression model to predict house sale prices. 
 
-The model was tuned using k-fold validation (with 10 folds). It was run through full diagnostic and four leverage points have been identified. These observations were removed from the training set as it is very plausable that the sales data set has some uncharacteristic outliers.
+The model was tuned using k-fold validation (with 10 folds). It was run through full diagnostic and four leverage points have been identified. These observations were removed from the training set as it is very plausible that the sales data set has some uncharacteristic outliers.
 
 Additionally, two categorical variables - `Condition2` and `Utilities` - were removed from the model because they did not have enough samples in each category. These variables may be meaningful for predicting response variable, but there is not enough information in our small data set in these variable to train on. 
 
 Final model had multiple $R^2$ of 0.9276, adjusted $R^2$ of 0.9225, AIC of -2172 and Kaggle score of 0.13376. These are the best values in all categories.
 
-Figure 1 shows typical model diagnostic. There is no dicernible pattern among residuals. The Q-Q plot shows some problems with distribution tails; however, this is not unexpected with sales data - there are bound to be some really good and some really bad deals out there. Major leverage points have been accounted for. 
+Figure 1 shows typical model diagnostic. There is no discernible pattern among residuals. The Q-Q plot shows some problems with distribution tails; however, this is not unexpected with sales data - there are bound to be some really good and some really bad deals out there. Major leverage points have been accounted for. 
 
 Data preparation and transformation, including response variable transformation, model building and re-building as well as model diagnostics resulted in a linear regression model to predict house sale prices.
 
@@ -190,7 +190,7 @@ Data preparation and transformation, including response variable transformation,
 
 # Experimentation and Results
 
-Having developed a model and successfully tested it against avaible test data, we can now review the results. 
+Having developed a model and successfully tested it against available test data, we can now review the results. 
 
 Our model has 98 parameters. Majority of those are dummy variables created for categorical variables. Table 2 lists all parameters and corresponding coefficients. Please note that our response variable is log-transformed, so coefficients will only give a general idea of the impact on the sale price, and not a specific amount. 
 
@@ -224,7 +224,7 @@ Attribute with the most negative influence on the sale price is severely damaged
 
 Other attribute that influences the sale price negatively is the Meadow Village neighborhood. Reviewing Ames, Iowa information, we can quickly notice that the Meadow Village despite its peaceful name is actually on the edge of town next to the airport. This would be a less desirable neighborhood in any town. On the opposite side of town, next to a golf club and and to the Ada Hayden Heritage park and lake, is the Stone Brooke neighborhood. This is one of the most positive attributes. Again not surprisingly, the most positive and negative neighborhoods are on completely opposite sides of town. 
 
-Other major negative attributes are lack of finished basement and fair quality of kitchen. Zoning attributes make up other major positive attribues. 
+Other major negative attributes are lack of finished basement and fair quality of kitchen. Zoning attributes make up other major positive attributes. 
 
 The model confirms a few attributes that can be considered common sense. For example, location adjacent to the railroad has a negative influence on the sale price. However, this only applies to the East-West railroad. The impact of the North-South railroad is positive. It is important to note that the East-West railroad cuts through the middle of the town while the North-South railroad only affects a small portion, and it is clearly a less used railroad. 
 
@@ -232,7 +232,7 @@ Other notable factors are:
 
 - House age has a negative influence, but not as great as some other attributes. 
 - Cul-de-sac is the most positive lot location. Inside lot has a slightly negative influence. A lot with streets on 2 sides has even more negative influence. Finally, a lot with streets on 3 sides has the biggest negative impact. 
-- Unfinished basement is generall a negative impact. As is low quality kitchen. 
+- Unfinished basement is generally a negative impact. As is low quality kitchen. 
 - Square footage of several characteristics, such as first or second floor, wood deck, porch, is not important (but the impact is slightly positive).
 - 1.5 and 2.5 story houses seem to be preferred; however, this variable is probably highly dependent on the type of houses available in Ames, Iowa and it could be representative of some other features.
 

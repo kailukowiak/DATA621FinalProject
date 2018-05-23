@@ -8,7 +8,7 @@ Members:
 * [Jaan Bernberg](https://github.com/jbrnbrg)
 * [Ilya Kats](https://github.com/ilyakats)
 * [Kyle Gilde](https://github.com/kylegilde)
-* [Michael Muller](parastyle)
+* [Michael Muller](https://github.com/parastyle)
 
 
 We will be invistigating housing prices found on [House Prices: Advanced

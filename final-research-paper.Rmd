@@ -81,7 +81,7 @@ Original data set included no complete observations (*see table 2*). However, ma
 
 After this substitution the number of complete observations went up significantly to 2,861 or about 98% of all observations. There remained only 58 observations with true missing values (about 2% of the total observations). These observations contained 180 missing values in 32 variables. None of the variables contained a large number of missing values. The top one was `MasVnrType` with 24 observations containing `NA` (0.8% of all observations). None of the variables were close to the 5% missing threshold that would suggest that we should drop them from analysis.
 
-Consider the pattern to the missing values. In addition to the quantity of missingness being important, why and how the values are missing can give us insight into whether we have a biased sample. There are three types of missing data [@faraway]: 1) Missing Completely at Random (MCAR), 2) Missing at Random (MAR), and 3) Missing Not at Random (MNAR). MCAR is when the probability of missingness is the same for all cases. This is the ideal type of missingness because we could delete these cases without incurring bias. MAR occurs when the probability of a value being missing depends upon a known mechanism. In this scenario, we could delete these observations and compensate by weighting by group membership. Finally, MNAR occurs when the values are missing because of an unknown variable. This is the type of missingness that is most likely to bias our sample. Faraway asserts that ascertaining the exact nature of the missingness is not possible and must be inferred. Figure 1 displays the combinations of missing values in the predictor variables. We may not have MCAR because we can see that the missingness is not more dispersed across all variables and  cases. Only 32 of the 79 predictors have a missing value, and we notice that the missingness occurs most often in some of the masonry, basement and garage variables. There is no indication that values are missing not at random and given the small number of missing values, we believe the bias, if any, will be limited.
+Consider the pattern to the missing values. In addition to the quantity of missingness being important, why and how the values are missing can give us insight into whether we have a biased sample. There are three types of missing data [@faraway]: 1) Missing Completely at Random (MCAR), 2) Missing at Random (MAR), and 3) Missing Not at Random (MNAR). MCAR is when the probability of missingness is the same for all cases. This is the ideal type of missingness because we could delete these cases without incurring bias. MAR occurs when the probability of a value being missing depends upon a known mechanism. In this scenario, we could delete these observations and compensate by weighting by group membership. Finally, MNAR occurs when the values are missing because of an unknown variable. This is the type of missingness that is most likely to bias our sample. Faraway asserts that ascertaining the exact nature of the missingness is not possible and must be inferred. Figure 2 displays the combinations of missing values in the predictor variables. We may not have MCAR because we can see that the missingness is not more dispersed across all variables and  cases. Only 32 of the 79 predictors have a missing value, and we notice that the missingness occurs most often in some of the masonry, basement and garage variables. There is no indication that values are missing not at random and given the small number of missing values, we believe the bias, if any, will be limited.
 
 There are four ways to deal with missing values [@Prabhakaran]:
 
@@ -90,7 +90,7 @@ There are four ways to deal with missing values [@Prabhakaran]:
 - **Imputation via mean, median and mode:** An expedient way to retain all of the cases and variables is to insert the mean or median for continuous variables or the mode for categorical or discrete variables. This approach may suffice for a small number of values, but has the potential to introduce bias in the form of decreasing the variance.
 - **Prediction:** This more advanced approach involves using the other variables to predict the missing values.
 
-For our data set we used multiple imputation by chained equations (MICE). The technique involves imputing multiple iterations of values in order to account for statistical uncertainty with standard errors [@azur]. Since it uses chained equations, MICE has the ability to impute both numerical and categorical variables. The ideal scenario to use MICE is when less than 5% of the values are missing and when values are missing at random. We used the `mice` `R` package with the `cart` (classification and regression trees) method. CART is one of the five `mice` methods that can impute both numerical and categorical variables. Figure 2 shows the density plots of the observed and imputed values. The imputed distributions have more variance and extremes than the observed distributions. If we were to run, multiple imputations, hopefully we would begin to see more convergence between the imputed and observed values.
+For our data set we used multiple imputation by chained equations (MICE). The technique involves imputing multiple iterations of values in order to account for statistical uncertainty with standard errors [@azur]. Since it uses chained equations, MICE has the ability to impute both numerical and categorical variables. The ideal scenario to use MICE is when less than 5% of the values are missing and when values are missing at random. We used the `mice` `R` package with the `cart` (classification and regression trees) method. CART is one of the five `mice` methods that can impute both numerical and categorical variables. Figure 3 shows the density plots of the observed and imputed values. The imputed distributions have more variance and extremes than the observed distributions. If we were to run, multiple imputations, hopefully we would begin to see more convergence between the imputed and observed values.
 
 ```{r NA Review}
 naVars <- read.csv(paste0("https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/",
@@ -116,7 +116,7 @@ Generally, it is more common to think about the age of the house than the year i
 
 Because we are not dealing with a time series data set, we have converted `YrSold` and `MoSold` variables from numeric to nominal. It is important to catch seasonality, but does not make sense to regress on these variables as continous variables.
 
-Using the side-by-side box plots in Figure 3, we examined the categorical variables with more than two values to see if the variable can be simplified by combining the values into two groups. Our criteria for this simplification is if the variables' inner quartile ranges of the response variable distinctly and logically bifurcate. For example, in `FireplaceQu` (fireplace quality), `HeatingQC` (heating quality) and `PoolQC` (pool quality), we can notice that only the inner quartiles are bifurcated into two groups that do not overlap: the highest *Excellent* value and all other lesser quality conditions. Additional values that are distinct from other values in the same variables are the *Wood Shingle* value in the roof material variable (`RoofMat1`), the above average values in the garage quality variable (`GarageQual`), the gas-related values in the heating variable (`Heating`), and the *Partial* value in the sale condition variable (`SaleCondition`). Consequently, we transformed these into dummy variables with appropriate names. This allowed us to preserve some degrees of freedom that would otherwise be subtracted if each and every one of the original values were turned into dummy variables.
+Using the side-by-side box plots in Figure 4, we examined the categorical variables with more than two values to see if the variable can be simplified by combining the values into two groups. Our criteria for this simplification is if the variables' inner quartile ranges of the response variable distinctly and logically bifurcate. For example, in `FireplaceQu` (fireplace quality), `HeatingQC` (heating quality) and `PoolQC` (pool quality), we can notice that only the inner quartiles are bifurcated into two groups that do not overlap: the highest *Excellent* value and all other lesser quality conditions. Additional values that are distinct from other values in the same variables are the *Wood Shingle* value in the roof material variable (`RoofMat1`), the above average values in the garage quality variable (`GarageQual`), the gas-related values in the heating variable (`Heating`), and the *Partial* value in the sale condition variable (`SaleCondition`). Consequently, we transformed these into dummy variables with appropriate names. This allowed us to preserve some degrees of freedom that would otherwise be subtracted if each and every one of the original values were turned into dummy variables.
 
 ```{r Correlations1}
 top_corr <- read.csv(paste0("https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/",
@@ -178,9 +178,17 @@ Models 1 through 4 rely on the Box-Cox transformation of the response variable w
 
 Model 6 is our primary linear regression model to predict house sale prices. 
 
-The model was tuned using k-fold validation (with 10 folds).
+The model was tuned using k-fold validation (with 10 folds). It was run through full diagnostic and four leverage points have been identified. These observations were removed from the training set as it is very plausable that the sales data set has some uncharacteristic outliers.
 
-![](https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/master/report_files/fig4_diag.png)
+Additionally, two categorical variables - `Condition2` and `Utilities` - were removed from the model because they did not have enough samples in each category. These variables may be meaningful for predicting response variable, but there is not enough information in our small data set in these variable to train on. 
+
+Final model had multiple $R^2$ of 0.9276, adjusted $R^2$ of 0.9225, AIC of -2172 and Kaggle score of 0.13376. These are the best values in all categories.
+
+Figure 1 shows typical model diagnostic. There is no dicernible pattern among residuals. The Q-Q plot shows some problems with distribution tails; however, this is not unexpected with sales data - there are bound to be some really good and some really bad deals out there. Major leverage points have been accounted for. 
+
+Data preparation and transformation, including response variable transformation, model building and re-building as well as model diagnostics resulted in a linear regression model to predict house sale prices.
+
+![Model diagnostics.](https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/master/report_files/fig4_diag.png)
 
 # Experimentation and Results
 
@@ -223,17 +231,17 @@ pander(stat_tbl, caption="Descriptive statistics for numerical variables.",
 
 ![](https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/master/report_files/fig1_na_dist.png)
 \begin{center}
-Figure 1. Missing values.
+Figure 2. Missing values.
 \end{center}
 
 ![](https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/master/report_files/fig2_imputation.png)
 \begin{center}
-Figure 2. Density plots of observed (blue) and imputed (red) values.
+Figure 3. Density plots of observed (blue) and imputed (red) values.
 \end{center}
 
 ![](https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/master/report_files/fig3_boxplots.png)
 \begin{center}
-Figure 3. Box plots of categorical variables against the response variable.
+Figure 4. Box plots of categorical variables against the response variable.
 \end{center}
 
 

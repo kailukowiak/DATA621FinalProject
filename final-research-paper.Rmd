@@ -73,11 +73,11 @@ approach are.
 
 ### Data Description
 
-The data set includes 2,919 observation and 79 indepedent variables. Out of those 36 are numeric, such as lot area or pool area in square feet, and 43 are categorical, such as garage type (attached to home, built-in, carport, etc.) or utilities (gas, sewer, both, etc.).
+The data set includes 2,910 observation and 79 indepedent variables. Out of those 36 are numeric, such as lot area or pool area in square feet, and 43 are categorical, such as garage type (attached to home, built-in, carport, etc.) or utilities (gas, sewer, both, etc.). The data set is split into 1,460 observations comprising the training set and 1,459 observations representing the testing set.
 
 ### Data Imputation
 
-Original data set included no complete observations (*see table 1*). However, many `NA` values found in the data carry useable information. For example, `NA` in the `PoolQC` variable (pool quality) implies that the property has no pool. Often this logic carried across multiple variables - for example, `NA` in `GarageQual` (garage quality), `GarageCond` (garage condition) and `GarageType` variables all imply that the property has no garage. This type of missing values was replaced with a new category - *No Pool*, *No Garage* or similar. This work was accomplished using the `forcats` `R` package.
+Original data set included no complete observations (*see table 2*). However, many `NA` values found in the data carry useable information. For example, `NA` in the `PoolQC` variable (pool quality) implies that the property has no pool. Often this logic carried across multiple variables - for example, `NA` in `GarageQual` (garage quality), `GarageCond` (garage condition) and `GarageType` variables all imply that the property has no garage. This type of missing values was replaced with a new category - *No Pool*, *No Garage* or similar. This work was accomplished using the `forcats` `R` package.
 
 After this substitution the number of complete observations went up significantly to 2,861 or about 98% of all observations. There remained only 58 observations with true missing values (about 2% of the total observations). These observations contained 180 missing values in 32 variables. None of the variables contained a large number of missing values. The top one was `MasVnrType` with 24 observations containing `NA` (0.8% of all observations). None of the variables were close to the 5% missing threshold that would suggest that we should drop them from analysis.
 
@@ -136,7 +136,7 @@ pander(tran_corr, keep.trailing.zeros=TRUE,
        justify=c("left", "left", "right", "right"))
 ```
 
-We examined whether our modeling would benefit from transforming any of the predictor variables. To do so, we have automated creation of several different versions of the predictor variables using `R`. We took natural logarithms, square roots and squares of the numerical variables, and then we calculated every possible pairwise interaction between these transformations, the original numerical variables and categorical variables. We then calculated all pairwise correlations between the interactions and the response variable `SalePrice`. The top correlations can be seen in table 4, which is sorted descendingly by R-squared. We observed that there are several correlation values higher than the highest correlation between the original predictor and the response, which is `OverallQual` at 0.79 (*see table 3*). Most promising transformations involved taking the square of `OverallQual` and multiplying it by the log-transformed or square-root-transformed one of the area variables. We added top five interactions to our training data set.
+We examined whether our modeling would benefit from transforming any of the predictor variables. To do so, we have automated creation of several different versions of the predictor variables using `R`. We took natural logarithms, square roots and squares of the numerical variables, and then we calculated every possible pairwise interaction between these transformations, the original numerical variables and categorical variables. We then calculated all pairwise correlations between the interactions and the response variable `SalePrice`. The top correlations can be seen in table 5, which is sorted descendingly by R-squared. We observed that there are several correlation values higher than the highest correlation between the original predictor and the response, which is `OverallQual` at 0.79 (*see table 4*). Most promising transformations involved taking the square of `OverallQual` and multiplying it by the log-transformed or square-root-transformed one of the area variables. We added top five interactions to our training data set.
 
 We have created several potential training sets to give use flexibility in training the model. The **first** of the three training data sets we created includes only the original variables with the missing values imputed. In model building and selection this set is referred to as the *original* data set. The **second** training data set includes seven "simplified" dummy variables instead of original variables. It also includes five highly-correlated interactions. This set is referred to as the *transformed* data set. The **third** training data set includes the same predictor variables as in the second set with a transformed response variable. While creating all interactions, we noticed that the correlation values appeared to increase vis-a-vis the square root of the response variable. Consequently, since the response variable contains only positive values, we created a simple BIC step model and used it to calculate the Box-Cox $\lambda$ value and transform the response variable. According to Box-Cox, a $\lambda$ value of approximately 0.184 should help the final model meet the normality assumption. This set is referred as the *Box-Cox* data set.
 
@@ -161,14 +161,26 @@ We ended up with six representative models:
 
 For all models the F-statistic's p-value shows a drastic improvement over an intercept-only model, so we can infer that these models are statistically significant.
 
+The table below summarizes the models. We can see a steady improvement in AIC numbers for models 1 through 6. Adjusted $R^2$ fluctuates, but it remains high and the values are close between various models. Fluctuation in $R^2$ is not enough to be the deciding factor in selecting a model.
+
 ```{r Models Summary, echo=F, eval=T, results=T}
 models <- read.csv(paste0("https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/",
                           "master/report_files/embedded_table1_models.csv"))
-colnames(models) <- c("Model", "Multiple R^2", "Adjusted r^2", "AIC", "Kaggle Score")
+colnames(models) <- c("Model", "Multiple R^2", "Adjusted R^2", "AIC", "Kaggle Score")
 pander(models, caption="",
        digits=4, emphasize.rownames=FALSE, keep.trailing.zeros=TRUE, 
        justify=c("left", "right", "right", "right", "right"))
 ```
+
+Since the data set comes from Kaggle, we have an easy way to validate test these models by predicting the sale price for the testing set and submitting our predictions. Kaggle provides a score that lets you judge the performance of our models. We submitted predictions from models 5 and 6. Model 6 was a clear favorite. 
+
+Models 1 through 4 rely on the Box-Cox transformation of the response variable with $\lambda$ value of 0.184. Although this may slightly improve a model, it makes conversion of prediction difficult and confusing. Log-transformation of the response variable used by models 5 and 6 is signficantly easier to implement. As such slight improvement of the Box-Cox model is not enough to justify added complexity of making predictions. It is important to consider how the model will be implemented and simplicity matters. 
+
+Model 6 is our primary linear regression model to predict house sale prices. 
+
+The model was tuned using k-fold validation (with 10 folds).
+
+![](https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/master/report_files/fig4_diag.png)
 
 # Experimentation and Results
 

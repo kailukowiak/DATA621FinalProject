@@ -7,18 +7,25 @@ author: |
         | City University of New York
         
 date: '2018-05-23'
-output: beamer_presentation
+output: 
+  beamer_presentation:
+    theme: "AnnArbor"
+    colortheme: "dolphin"
+    fonttheme: "structurebold"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## R Markdown
+## Abstract
 
-This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+What housing
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+***
+col2
+
+##  Level2 
 
 ## Slide with Bullets
 

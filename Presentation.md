@@ -67,7 +67,7 @@ Transformations
 
 We created a new variable, age, which was the age at which the house was sold. Any negative values were set to zero.
 
-Ordered categorical variables such as quality that clearly split the response variable were changed to dummy variables.
+Ordered categorical variables such as `HeatingQC` that did not have overlapping interquartile ranges were changed to a single dummy variable. For example, if `HeatingQC == Excellent` and `HeatingQC != Excellent` did not have overlapping IQRs, they would be transformed into a dummy variable. This increases on degrees of freedom.
 
 Interaction terms were created via a grid search and selected based on their individual $R^2$ values.
 

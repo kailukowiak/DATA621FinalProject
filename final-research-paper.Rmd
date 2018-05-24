@@ -53,7 +53,7 @@ The data was originally published in the Journal of Statistics Education (Volume
 
 # Literature Review
 
-Building regression models to predict house prices is not a new undertaking. Quite the opposite, a lot of research has gone into this area. There is a clear financial benefit to buyers, sellers and other parties in knowing which attributes influence the final sale price. There is also a lot of data readily available with some cleanup work. Data is kept by local governments to be used in the assessment process for property taxes. There is a lot of data captured by realtors when a property is listed on the market. Additionally, in large part thanks to the information revolution, data are easily accessible via many aggregators such as MLS.com.
+Building regression models to predict house prices is not a new undertaking. Quite the opposite, a lot of research has gone into this area. There is a clear financial benefit to buyers, sellers and other parties in knowing which attributes influence the final sale price. There is also a lot of data readily available with some cleanup work. Data is kept by local governments to be used in the assessment process for property taxes. There is a lot of data captured by realtors when a property is listed on the market. Additionally, in large part thanks to the information revolution, data are easily accessible via many multiple listing services such as MLS.com.
 
 There are many attributes that factor into a house price. For example, environmental attributes can impact the price substantially. Gardens, pleasant views, and attractive landscaping can all increase the house value [@luttik]. Neighborhood attributes such as schools and public services also play a factor. 
 
@@ -159,7 +159,7 @@ We ended up with six representative models:
 
 For all models the F-statistic's p-value shows a drastic improvement over an intercept-only model, so we can infer that these models are statistically significant.
 
-The table below summarizes the models. We can see a steady improvement in AIC numbers for models 1 through 6. Adjusted $R^2$ fluctuates, but it remains high and the values are close between various models. The fluctuation in $R^2$ is not enough to be the deciding factor in selecting a model.
+The table below summarizes the models. We can see a steady improvement in AIC numbers for models 1 through 6. Adjusted $R^2$ fluctuates, but it remains high, and the values are close between various models. The fluctuation in $R^2$ is not enough to be the deciding factor in selecting a model.
 
 ```{r Models Summary, echo=F, eval=T, results=T}
 models <- read.csv(paste0("https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/",
@@ -170,7 +170,7 @@ pander(models, caption="",
        justify=c("left", "right", "right", "right", "right"))
 ```
 
-Since the data set comes from Kaggle, we have an easy way to validate test these models by predicting the sale price for the testing set and submitting our predictions. Kaggle provides a score that lets you judge the performance of our models. We submitted predictions from models 5 and 6. Model 6 was a clear favorite. 
+Since the data set comes from Kaggle, we have an easy way to evaluate our models by predicting the sale price for the testing set and submitting our predictions. Kaggle provides a score that lets you judge the performance of our models. We submitted predictions from models 5 and 6. Model 6 was a clear favorite. 
 
 Models 1 through 4 rely on the Box-Cox transformation of the response variable with $\lambda$ value of 0.184. Although this may slightly improve a model, it makes conversion of prediction difficult and confusing. Log-transformation of the response variable used by models 5 and 6 is significantly easier to implement. As such slight improvement of the Box-Cox model is not enough to justify added complexity of making predictions. It is important to consider how the model will be implemented and simplicity matters. 
 
@@ -178,11 +178,11 @@ Model 6 is our primary linear regression model to predict house sale prices.
 
 The model was tuned using k-fold validation (with 10 folds). It was run through full diagnostic and four leverage points have been identified. These observations were removed from the training set as it is very plausible that the sales data set has some uncharacteristic outliers.
 
-Additionally, two categorical variables - `Condition2` and `Utilities` - were removed from the model because they did not have enough samples in each category. These variables may be meaningful for predicting response variable, but there is not enough information in our small data set in these variable to train on. 
+Additionally, two categorical variables - `Condition2` and `Utilities` - were removed from the model because they did not have enough samples in each category. These variables may be meaningful for predicting the response variable, but there is not enough information in our small data set for these variable to train on. 
 
-Final model had multiple $R^2$ of 0.9276, adjusted $R^2$ of 0.9225, AIC of -2172 and Kaggle score of 0.13376. These are the best values in all categories.
+The final model had multiple $R^2$ of 0.9276, adjusted $R^2$ of 0.9225, AIC of -2172 and Kaggle score of 0.13376. These are the best values in all categories.
 
-Figure 1 shows typical model diagnostic. There is no discernible pattern among residuals. The Q-Q plot shows some problems with distribution tails; however, this is not unexpected with sales data - there are bound to be some really good and some really bad deals out there. Major leverage points have been accounted for. 
+Figure 1 shows the model diagnostics. There is no discernible pattern among residuals. The Q-Q plot shows some problems with distribution tails; however, this is not unexpected with sales data - there are bound to be some really good and some really bad deals out there. Major leverage points have been accounted for. 
 
 Data preparation and transformation, including response variable transformation, model building and re-building as well as model diagnostics resulted in a linear regression model to predict house sale prices.
 
@@ -192,7 +192,7 @@ Data preparation and transformation, including response variable transformation,
 
 Having developed a model and successfully tested it against available test data, we can now review the results. 
 
-Our model has 98 parameters. Majority of those are dummy variables created for categorical variables. Table 2 lists all parameters and corresponding coefficients. Please note that our response variable is log-transformed, so coefficients will only give a general idea of the impact on the sale price, and not a specific amount. 
+Our model has 98 parameters. The majority of those are dummy variables created for categorical variables. Table 2 lists all parameters and corresponding coefficients. Please note that our response variable is log-transformed, so coefficients will only give a general idea of the impact on the sale price, and not a specific amount. 
 
 Linear regression takes the following form:
 
@@ -220,21 +220,21 @@ pander(coef[,1:3], caption="Linear model parameters and coefficients (sorted by 
        justify=c("left", "left", "right"))
 ```
 
-Attribute with the most negative influence on the sale price is severely damaged functionality of the house. Major deductions in functionality (a step above *Severely Damaged*) is also included in the top five negative attributes. Interestingly, typical functionality has one of the most positive influences on the sale price. Clearly and not surprisingly, general house condition that ranges from *Typical* to *Salvage Only*, is very import to the final sale price. 
+The attribute with the most negative effect on the sale price is severely damaged functionality of the house. Major deductions in functionality (a step above *Severely Damaged*) is also included in the top five negative attributes. Interestingly, typical functionality has one of the most positive influences on the sale price. Clearly and not surprisingly, general house condition that ranges from *Typical* to *Salvage Only*, is very important to the final sale price. 
 
-Other attribute that influences the sale price negatively is the Meadow Village neighborhood. Reviewing Ames, Iowa information, we can quickly notice that the Meadow Village despite its peaceful name is actually on the edge of town next to the airport. This would be a less desirable neighborhood in any town. On the opposite side of town, next to a golf club and and to the Ada Hayden Heritage park and lake, is the Stone Brooke neighborhood. This is one of the most positive attributes. Again not surprisingly, the most positive and negative neighborhoods are on completely opposite sides of town. 
+Another attribute that influences the sale price negatively is the Meadow Village neighborhood. Reviewing Ames, Iowa information, we can quickly notice that the Meadow Village despite its peaceful name is actually on the edge of town next to the airport. This would be a less desirable neighborhood in any town. On the opposite side of town, next to a golf club and to the Ada Hayden Heritage park and lake, is the Stone Brooke neighborhood. This is one of the most positive attributes. Again not surprisingly, the most positive and negative neighborhoods are on completely opposite sides of town. 
 
 Other major negative attributes are lack of finished basement and fair quality of kitchen. Zoning attributes make up other major positive attributes. 
 
 The model confirms a few attributes that can be considered common sense. For example, location adjacent to the railroad has a negative influence on the sale price. However, this only applies to the East-West railroad. The impact of the North-South railroad is positive. It is important to note that the East-West railroad cuts through the middle of the town while the North-South railroad only affects a small portion, and it is clearly a less used railroad. 
 
-Other notable factors are:
+Other notable factors are the following:
 
 - House age has a negative influence, but not as great as some other attributes. 
-- Cul-de-sac is the most positive lot location. Inside lot has a slightly negative influence. A lot with streets on 2 sides has even more negative influence. Finally, a lot with streets on 3 sides has the biggest negative impact. 
-- Unfinished basement is generally a negative impact. As is low quality kitchen. 
-- Square footage of several characteristics, such as first or second floor, wood deck, porch, is not important (but the impact is slightly positive).
-- 1.5 and 2.5 story houses seem to be preferred; however, this variable is probably highly dependent on the type of houses available in Ames, Iowa and it could be representative of some other features.
+- Being on a cul-de-sac is the most positive lot location. Inside lot has a slightly negative effect, and a lot with streets on 2 sides has even more negative coefficient. Finally, a lot with streets on 3 sides has the biggest negative impact. 
+- An unfinished basement generally has a negative impact as does a low-quality kitchen. 
+- The square footage of several characteristics, such as first or second floor, wood deck, porch, is not important (but the impact is slightly positive).
+- 1.5 and 2.5 story houses seem to be preferred; however, this variable is probably highly dependent on the type of houses available in Ames, and it could be representative of some other features.
 
 # Discussion and Conclusion
 
@@ -242,7 +242,7 @@ Location and condition seem to be major attributes in house sale prices. There i
 
 The biggest limiting factor of our study is that it is based on one Midwest town's data. This model may not transfer well to other locations. After all it is not hard to imagine that the driving factors in Ames, Iowa are quite different from factors in New York, NY or Los Angeles, California. It is a helpful starting point, but may not be widely applicable. 
 
-Our research is based exclusively on linear regression. Other methods, such as Support Vector Machines or Random Forrest, may be able to achieve much better results. This data set provides many opportunity for research, and it would be beneficial to try other methods for comparison purposes. If moving to other similar data sets, then increasing complexity by trying to account for other factors should produce the most benefit. 
+Our research is based exclusively on linear regression. Other methods, such as Support Vector Machines or Random Forrest, may be able to achieve much better results. This data set provides a rich opportunity for research, and it would be beneficial to try other methods for comparison purposes.
 
 ```{r Summary Stats Numeric}
 stat_tbl <- read.csv(paste0("https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/",

@@ -53,10 +53,13 @@ The 79 explanatory features describe attributes of the houses such as conditions
 Literature Review
 ========================================================
 
-There is extensive literature on house prices:
-* Non-physical characteristics are important.
-  * Problematic because we have mostly physical data.
-* Neighboring house prices are important but not included. 
+* Environmental attributes can impact sale prices substantially : These include views, land contours, greenery, and proximity to schooling (Luttik, 2000).  
+
+* Simply assessing the attributes of a house by number and conditional qualities of rooms is not not sufficient. (i.e. Two beautiful half-bathrooms does not equate to two beautiful bathroom suites.(Pardoe, 2008)) The caveat to including whether or not the bathroom is a half-bathroom or not; creates tedious datasets, confounding variables, and issue of where to draw the line of specificity.  
+
+* We can expect to see a high coefficient on the neighborhood variable. However this is an over generalized attribute stemming from a variable we do not have, 'neighboring houses.'(Dubin, 1998)  
+
+* A proposed approach to modeling housing sale prices, would be a hedonic regression. Simply put, analyze the factors of a house, group attributes to those factors, and make several different regressions, leading to one output.(Downes, 2002)
 
 Methodology 1
 ===

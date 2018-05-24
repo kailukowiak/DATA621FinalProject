@@ -43,11 +43,11 @@ ggplot(data = states) +
 
 Introduction
 ========================================================
-![House in Aimes](images/AimesHouse.jpeg)
+![House in Aimes](https://github.com/kaiserxc/DATA621FinalProject/blob/master/images/AimesHouse.jpeg?raw=true)
 ***
-The data was originally published in the Journal of Statistics Education (Volume 19, Number 3). It is now part of a long running Kaaggle competition.
+The data was originally published in the Journal of Statistics Education (Volume 19, Number 3) as a juxtaposition to the Boston housing dataset. It is now part of a long running Kaggle competition.
 
-The features describe attributes of the houses such as siding condition and neighborhood. They are both numeric and categorical.
+The 79 explanatory features describe attributes of the houses such as conditions, zoning, and neighborhood. They are both numeric and categorical.
 
 
 Literature Review
@@ -65,9 +65,9 @@ The data is split almost equally into training and test data.
 
 ## Data imputation
 Some NA values like pool quality were `NA` if there was no pool. values like this were updated
-to reflect their actual status.
+to reflect their actual abscence of.
 
-After these were fixed, there was only 2% of values missing.
+After the features were fixed, 2% of missing values remained.
 ***
 ![Missing Values](https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/master/report_files/fig1_na_dist.png)
 
@@ -96,16 +96,16 @@ Transformations 2
 
 Finally a Box-Cox transformation was performed. The optimal $\lambda$ was found to be 0.184. This means that the response variable `SalePrice` was raised to the 0.184 power.
 
-Visible in the scatter plots, many of the relationships become more linear.
+$${Y}(\lambda)  = \begin{cases} \frac { { y }^{ \lambda  } - 1 }{ \lambda }, & \text{if}\ \lambda \neq 0 \\ log(y), & \text{if}\ \lambda = 0 \end{cases}$$  
+
+Visible in the scatter plots, many of the relationships become more linear. 
 
 ***
-![Difference in scatter plots between transformed and raw data](images/Scatter_Trans_and_Imp.png)
+![Difference in scatter plots between transformed and raw data](https://github.com/kaiserxc/DATA621FinalProject/blob/master/images/Scatter_Trans_and_Imp.png?raw=true)
 
 Modeling
 ===
-
 There were six models used: 
-
 
 ```{r echo=FALSE}
 library(knitr)
@@ -126,15 +126,16 @@ kable(models) %>%  kable_styling(font_size = 12)
 Model Selection
 ===
 
-Model 6 had the best performance both on the training data, as well as the best kaggle score. As such, we are not worried about over fitting. It had multiple R2 of 0.9276, adjusted R2 of 0.9225, AIC of -2172 and Kaggle score of 0.13376. These are the best values in all categories.
+During model evaluation, Models 5 & 6 was chosen as most valid. Model tuning was performed through K-fold validation. Four leverage points were removed, and categorical variables *Condition2* and *Utilities* were removed for poor sample distribution.  
+
+Afterwards, adjusted model 6 had the best performance both on the training data, as well as the best kaggle score. As such, we are not worried about over fitting. It had multiple R2 of 0.9276, adjusted R2 of 0.9225, AIC of -2172 and Kaggle score of 0.13376. These are the best values in all categories.
 
 ***
 ![Model diagnostics.](https://raw.githubusercontent.com/kaiserxc/DATA621FinalProject/master/report_files/fig4_diag.png)
 
 Conclusion
-===
-Examining the coefficients on the model, we are reminded of the old rel estate adage, 'Location, Location, Location.'
+=== 
+  Examining the model coefficients, we are reminded of the classic real estate adage, 'Location, Location, Location.' Variables with the most powerful coefficients included features that are only obtainable in certain areas. Such as pools, garages, neighborhood, and the contour of land. Where as the lowest coefficients included shapes, styles, and building materials. 
 
-Other factors such as condition also played a role. Further, it is unlikely that this model will transfer to other geographic areas and should only be used to estimate houses in the mid west. 
+  Other factors such as condition also played a role. Further, it is unlikely that this model will transfer to other geographic areas and should only be used to estimate houses in the mid west. In particular, university towns such as this one where off-campus housing may dictate a large portion of sale price. 
 
-Finally, we did not use non-linear approaches like random forests or support vector machines. 

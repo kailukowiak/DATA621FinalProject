@@ -138,7 +138,7 @@ p2 <- trainImpTrans %>%
 
 ```{r fig.height=15, fig.width=10}
 ggGrid <- grid.arrange(p1, p2, ncol = 2)
-ggsave('Scatter_Trans_and_Imp.png',plot = ggGrid, path = 'images', width = 15, height = 20)
+ggsave('Scatter_Trans_and_Imp.png',plot = ggGrid, path = 'images', width = 10, height = 15)
 ```
 
 

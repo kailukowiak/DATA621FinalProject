@@ -35,7 +35,7 @@ library(pander)
 
 # Abstract
 
-Buying or selling a house is one of the important events faced by many in their lifetime. It is also a big part of our economy. As such understanding what factors drive sale prices is both interesting and beneficial. In this project we use popular Ames, Iowa housing data set to investigate what factors may influence the final sale price the most. Our research showed that location and condition of the house are the biggest attributes. A bigger house will not increase the final sale price as much as a smaller, nicer house in a better neighborhood. It definitely doesn't pay to have the biggest house on the block.
+Buying or selling a house is one of the important events faced by many in their lifetime. It is also a big part of our economy. As such understanding what factors drive sale prices is both interesting and beneficial. In this project we use the popular Ames, Iowa housing data set to investigate which factors influence the final sale price. Our research showed that location and condition of the house are the biggest attributes. A bigger house will not increase the final sale price as much as a smaller, nicer house in a better neighborhood. It definitely does not pay to have the biggest house on the block.
 
 # Key Words
 
